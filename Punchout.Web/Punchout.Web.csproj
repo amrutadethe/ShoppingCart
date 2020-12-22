@@ -136,9 +136,12 @@
     <Content Include="Content\css\style.css" />
     <Content Include="Content\fonts\Glyphter.svg" />
     <Content Include="Content\img\add.svg" />
+    <Content Include="Content\img\add_to_cart.gif" />
     <Content Include="Content\img\arrow.svg" />
+    <Content Include="Content\img\cart.gif" />
     <Content Include="Content\img\catalog-blue.png" />
     <Content Include="Content\img\catalog-white.png" />
+    <Content Include="Content\img\chemicoMaysLogoBlue.gif" />
     <Content Include="Content\img\down-arrow %281%29.png" />
     <Content Include="Content\img\down-arrow.png" />
     <Content Include="Content\img\fevicon.png" />
@@ -202,6 +205,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\ProductList.cshtml" />
     <Content Include="Views\Home\PartialLayout.cshtml" />
+    <Content Include="Views\Home\ProductDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

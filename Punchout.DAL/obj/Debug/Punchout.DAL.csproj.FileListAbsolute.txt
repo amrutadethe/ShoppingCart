@@ -22,3 +22,15 @@ E:\NitinAnchal\Projects\NewProject\MichaelCollins_ReportPortal\Punchout_NewRequi
 E:\NitinAnchal\Projects\NewProject\MichaelCollins_ReportPortal\Punchout_NewRequirement\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.csproj.CopyComplete
 E:\NitinAnchal\Projects\NewProject\MichaelCollins_ReportPortal\Punchout_NewRequirement\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.dll
 E:\NitinAnchal\Projects\NewProject\MichaelCollins_ReportPortal\Punchout_NewRequirement\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.pdb
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\Punchout.DAL.dll
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\Punchout.DAL.pdb
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\Punchout.Entities.dll
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\EntityFramework.dll
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\Punchout.Entities.pdb
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\Punchout.Entities.dll.config
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\bin\Debug\EntityFramework.xml
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.csprojAssemblyReference.cache
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.csproj.CoreCompileInputs.cache
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.csproj.CopyComplete
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.dll
+D:\AmrutaDethe\Projects\Punchout_client_Michael\SourceCode\Punchout\Punchout.DAL\obj\Debug\Punchout.DAL.pdb
