@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Punchout.Entities.CI_Item>
+
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content">
+
+
+    <div id="centerColumn">
+        <div align="left" style="margin-top:-414px; width:140%;">
+
+            <h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.Count() Items Found</h3>
+            <p class="NormalRed">
+                These are the approved HS&E items for your site. To add items to your approved list, please use the link above.
+            </p>
+            <div class="table-responsive">
+                <div id="partialDiv">
+                    @*@Html.Partial("ProductList_partial", Model);*@
+                    <table class="table" style="border-style:ridge;">
+                        <tr style="background-color: #990000; font-weight:bold; color:white;text-align-last:center;">
+                            <th>
+                                Item Code
+                            </th>
+
+                            <th>
+                                Item Description
+                            </th>
+                            <th>
+                                Unit of Measure
+                            </th>
+
+                            <th>
+                                Unit Price
+                            </th>
+                            <th style="text-wrap:normal;">
+                                Lead Time (days)
+                            </th>
+
+                            <th>Details</th>
+                            <th>Add To Cart</th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr style="background-color: #FFFBD6;color: #333333;align-content:center;">
+                                <td>
+                                    @Html.DisplayFor(modelitem => item.ItemCode)
+                                </td>
+
+                                <td>
+                                    @*@html.DisplayFor(modelitem => item.itemcodedesc + "--" + item.category2 + " " + item.category1)*@
+                                    @{
+                                        var fullname = item.ItemCodeDesc + "--" + item.Category2 + " " + item.Category1;
+                                        @Html.DisplayFor(modelitem => fullname)
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelitem => item.SalesUnitOfMeasure)
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelitem => item.StandardUnitPrice)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelitem => item.UDF_HNW_CLASSIFICATION_CODE)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Click", "Click", new { id = item.ItemCode })
+
+                                </td>
+                                <td>
+                                    @Html.ActionLink("AddItem", "AddItem", new { id = item.ItemCode })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
