@@ -3,52 +3,83 @@
 @{
     ViewBag.Title = "Product Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string ProductImageUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["productImageUrl"]);
 }
 
 <div id="content">
     <div id="centerColumn">
-        
+
+        <div align="left" style="margin-top:-414px;">
             <div>
-                <h2>Product Details</h2>
-                <hr />
+                <h2></h2>
 
-                <dl class="dl-horizontal">
-                    <dt>
-                        @Html.DisplayNameFor(model => model.ItemCode)
-                    </dt>
+                <div class="ContentHead" style="width: max-content;">
+                    @{
+                        var ItemDesc = Model.ItemCodeDesc + "--" + Model.Category2 + " " + Model.Category1;
+                        @Html.DisplayFor(Model => ItemDesc)
+                    }
+                    </div>
+                    <table border="0">
+                        <tr>
+                            <td style="vertical-align:top;">
 
-                    <dd>
-                        @Html.DisplayFor(model => model.ItemCode)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.ItemCodeDesc)
-                    </dt>
+                                @{
+                                    string image = ProductImageUrl + Model.Category1 + ".jpg";
+                                }
+                                @Html.Image("categoryImage", image, "Product Image")
+                            </td>
+                            <td style="vertical-align: top">
+                                @{
+                                    var description = Model.ItemCodeDesc + "--" + Model.Category2;
+                                    @Html.DisplayFor(Model => description)
+                                }
+                                @{
+                                    var manufacture = "Manufacturer:" + Model.UDF_MANUFACT;
+                                    @Html.DisplayFor(Model => manufacture)
+                                }
+                                <br /><br /><br /><br />
+                            </td>
+                        </tr>
+                    </table>
+               
+                @*</div>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.ItemCodeDesc)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Category1)
-                    </dt>
+                    <dl>
+                        <dd>
+                            @Html.DisplayFor(model => model.ItemCode)
+                        </dd>
+                        <dd>
+                            @Html.DisplayFor(model => model.ItemCodeDesc)
+                        </dd>
+                        <dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Category1)
-                    </dd>
 
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Category2)
-                    </dt>
+                            @Html.DisplayFor(model=>model.Category1, "" + model =>model.Category1+".jpg")
+                        </dd>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.Category2)
-                    </dd>
+                        <dd>
+                    @Html.DisplayFor(model => model.Category2)
+                </dd>
 
-                </dl>
+                    </dl>
+        </div>*@
+            <span class="UnitCost">
+                @{
+                    var Price = "Your Price:" +Convert.ToString(Model.StandardUnitPrice);
+                    @Html.DisplayFor(Model => Price)
+                }
+            </span>
+                <br /><a href='AddToCart.aspx' style="border: 0 none white">
+                    <img id="Img1" src="~/Content/img/add_to_cart.gif" runat="server"
+                         alt="Add To Cart" style="border-width: 0" />
+                </a><br /><br />
+                @*<div>
+
+                    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+                    @Html.ActionLink("Back to List", "Index")
+
+                </div>*@
             </div>
-            <p>
-                @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-                @Html.ActionLink("Back to List", "Index")
-            </p>
-        </div>
-       
     </div>
+
+</div>

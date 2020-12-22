@@ -101,7 +101,7 @@ namespace Punchout.DAL
             {
                 DataTable dt = new DataTable();
                 SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlCommand cmd = new SqlCommand("SELECT i.ExtendedDescriptionText,c.ItemCode,c.ItemCodeDesc,c.Category1,c.Category2  FROM [MAS_CML].[dbo].[CI_ExtendedDescription] i, [MAS_CML].[dbo].[CI_Item] c WHERE i.ExtendedDescriptionKey = c.ExtendedDescriptionKey AND ItemCode Like @itemText", con);
+                SqlCommand cmd = new SqlCommand("SELECT i.ExtendedDescriptionText,c.ItemCode,c.ItemCodeDesc,c.Category1,c.Category2,c.UDF_MANUFACT,c.StandardUnitPrice  FROM [MAS_CML].[dbo].[CI_ExtendedDescription] i, [MAS_CML].[dbo].[CI_Item] c WHERE i.ExtendedDescriptionKey = c.ExtendedDescriptionKey AND ItemCode Like @itemText", con);
                 cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", id));
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -114,6 +114,8 @@ namespace Punchout.DAL
                     ProductDetail.ItemCodeDesc = Convert.ToString(dt.Rows[0]["ItemCodeDesc"]);
                     ProductDetail.Category1 = Convert.ToString(dt.Rows[0]["Category1"]);
                     ProductDetail.Category2 = Convert.ToString(dt.Rows[0]["Category2"]);
+                    ProductDetail.UDF_MANUFACT = Convert.ToString(dt.Rows[0]["UDF_MANUFACT"]);
+                    ProductDetail.StandardUnitPrice = Convert.ToDecimal(dt.Rows[0]["StandardUnitPrice"]);
                 }
                 return ProductDetail;
             }

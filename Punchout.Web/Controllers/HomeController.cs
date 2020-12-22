@@ -108,7 +108,7 @@ namespace Punchout.Web.Controllers
             return View("ProductList", getlist);
         }
 
-        public ActionResult Click(string id)
+        public ActionResult ProductDetails(string id)
         {
             var getProductDetails = objBALProductList.GetProductDetails(id);
             return View("ProductDetails", getProductDetails);
