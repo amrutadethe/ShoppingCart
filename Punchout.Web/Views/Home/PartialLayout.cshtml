@@ -65,7 +65,8 @@
                     Cancel Shopping
                 </div>
                 <div class="row">
-                    <input type="button" value="Cancel" />
+                    <input type="button" value="Cancel" onclick="myFunction()" />
+
                 </div>
             </div>
         </div>
@@ -130,7 +131,7 @@
             console.log(siteId);
 
             Window.location.href=@Url.Action("ProductList", "Home",new { @searchText= searchText, })?searchText=' + searchText + '&itemText=' + itemText + '&SiteId=' + siteId + '&SiteDesc=' + sitedesc + '*@
-           @* $.ajax({
+            @* $.ajax({
                 type: "GET",
                 url: '@Url.Action("ProductList", "Home")?searchText=' + searchText + '&itemText=' + itemText + '&SiteId=' + siteId + '&SiteDesc=' + sitedesc + '',
 
@@ -139,8 +140,17 @@
                 }
             });
         });*@
-        </script>
+            function myFunction() {
+                var x;
+                if (confirm("Are you sure you want to cancel your current shopping visit?  This will remove all items in your shopping cart and reset your site.!") == true) {
 
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        </script>
+        @*@Html.ActionLink("ClicktoConfirm", "Home", null, new { onclick = "return myFunction()" })*@
     }
 </body>
 </html>

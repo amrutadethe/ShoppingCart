@@ -17,7 +17,8 @@ namespace Punchout.Web.Controllers
         DALProduct objDALproductList = new DALProduct();
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
-
+        DALProductDetails objDALProductDetails = new DALProductDetails();
+        BALProductDetails objBALProductDetails = new BALProductDetails();
 
         public ActionResult Index()
         {
@@ -28,6 +29,7 @@ namespace Punchout.Web.Controllers
             using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
             {
                 using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
+
                 {
                     con.Open();
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -106,7 +108,14 @@ namespace Punchout.Web.Controllers
             var getlist = objBALProductList.GetProductListByItemCode(itemText, site_code, site_desc);
             return View("ProductList", getlist);
         }
-
+        /// <summary>
+        /// Clear Shopping Cart
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ClicktoConfirm()
+        {
+            return View();
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -119,6 +128,11 @@ namespace Punchout.Web.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+        public ActionResult Click(string id)
+        {
+            var getProductDetails = objBALProductDetails.GetProductDetails(id);
+            return View("ProductDetails", getProductDetails);
         }
     }
 }
