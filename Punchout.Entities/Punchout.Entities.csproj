@@ -54,6 +54,11 @@
       <DependentUpon>MAS_CMLEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="CMIS_Cart1.cs">
+      <DependentUpon>CMIS_Cart.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Include="MAS_CMLEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -70,6 +75,27 @@
       <DependentUpon>MAS_CMLEntities.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShoppingCart.cs">
+      <DependentUpon>ViewCart.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCart.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewCart.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCart.cs">
+      <DependentUpon>ViewCart.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCart.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewCart.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewCart1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewCart.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="MAS_CMLEntities.edmx">
@@ -83,8 +109,19 @@
       <DependentUpon>MAS_CMLEntities.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
+    <EntityDeploy Include="ViewCart.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ViewCart.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ViewCart.edmx.diagram">
+      <DependentUpon>ViewCart.edmx</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CMIS_Cart.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CMIS_Cart1.cs</LastGenOutput>
+    </Content>
     <Content Include="MAS_CMLEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MAS_CMLEntities.Context.cs</LastGenOutput>
@@ -94,6 +131,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MAS_CMLEntities.edmx</DependentUpon>
       <LastGenOutput>MAS_CMLEntities.cs</LastGenOutput>
+    </Content>
+    <Content Include="ViewCart.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ViewCart.edmx</DependentUpon>
+      <LastGenOutput>ViewCart.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="ViewCart.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ViewCart.edmx</DependentUpon>
+      <LastGenOutput>ViewCart1.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

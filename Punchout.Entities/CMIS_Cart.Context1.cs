@@ -15,7 +15,7 @@ namespace Punchout.Entities
     
     public partial class cmis_portal_uatEntities1 : DbContext
     {
-        public cmis_portal_uatEntities1()
+        public cmis_portal_uatEntities()
             : base("name=cmis_portal_uatEntities")
         {
         }
