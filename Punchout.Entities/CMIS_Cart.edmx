@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="cmis_portal_uatModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ShoppingCart">
+          <Key>
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="RecordID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CartID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="ProductID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'cmis_portal_uat.dbo.ViewCart' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ViewCart">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+            <PropertyRef Name="Quantity" />
+          </Key>
+          <Property Name="ItemCode" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="UDF_CHEM_CATEGORY" Type="varchar" MaxLength="53" />
+          <Property Name="ItemCodeDesc" Type="varchar" MaxLength="30" />
+          <Property Name="UnitCost" Type="decimal" Precision="15" Scale="6" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="SalesUnitOfMeasure" Type="varchar" MaxLength="4" />
+          <Property Name="StandardLeadTime" Type="decimal" Precision="6" Scale="0" />
+          <Property Name="CartID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Category1" Type="varchar" MaxLength="10" />
+          <Property Name="Category2" Type="varchar" MaxLength="10" />
+          <Property Name="UDF_ENVIRONMENTAL" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_FREIGHT" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_FUEL" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_OTHER" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_PALLET" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_HNW_CLASSIFICATION_CODE" Type="varchar" MaxLength="39" />
+        </EntityType>
+        <EntityContainer Name="cmis_portal_uatModelStoreContainer">
+          <EntitySet Name="ShoppingCart" EntityType="Self.ShoppingCart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ViewCart" EntityType="Self.ViewCart" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ViewCart].[ItemCode] AS [ItemCode], 
+    [ViewCart].[UDF_CHEM_CATEGORY] AS [UDF_CHEM_CATEGORY], 
+    [ViewCart].[ItemCodeDesc] AS [ItemCodeDesc], 
+    [ViewCart].[UnitCost] AS [UnitCost], 
+    [ViewCart].[Quantity] AS [Quantity], 
+    [ViewCart].[SalesUnitOfMeasure] AS [SalesUnitOfMeasure], 
+    [ViewCart].[StandardLeadTime] AS [StandardLeadTime], 
+    [ViewCart].[CartID] AS [CartID], 
+    [ViewCart].[Category1] AS [Category1], 
+    [ViewCart].[Category2] AS [Category2], 
+    [ViewCart].[UDF_ENVIRONMENTAL] AS [UDF_ENVIRONMENTAL], 
+    [ViewCart].[UDF_FREIGHT] AS [UDF_FREIGHT], 
+    [ViewCart].[UDF_FUEL] AS [UDF_FUEL], 
+    [ViewCart].[UDF_OTHER] AS [UDF_OTHER], 
+    [ViewCart].[UDF_PALLET] AS [UDF_PALLET], 
+    [ViewCart].[UDF_HNW_CLASSIFICATION_CODE] AS [UDF_HNW_CLASSIFICATION_CODE]
+    FROM [dbo].[ViewCart] AS [ViewCart]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cmis_portal_uatModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ShoppingCart">
+          <Key>
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="RecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CartID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="ProductID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ViewCart">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+            <PropertyRef Name="Quantity" />
+          </Key>
+          <Property Name="ItemCode" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UDF_CHEM_CATEGORY" Type="String" MaxLength="53" FixedLength="false" Unicode="false" />
+          <Property Name="ItemCodeDesc" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="UnitCost" Type="Decimal" Precision="15" Scale="6" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="SalesUnitOfMeasure" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="StandardLeadTime" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CartID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Category1" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Category2" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UDF_ENVIRONMENTAL" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_FREIGHT" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_FUEL" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_OTHER" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_PALLET" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="UDF_HNW_CLASSIFICATION_CODE" Type="String" MaxLength="39" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="cmis_portal_uatEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ShoppingCarts" EntityType="Self.ShoppingCart" />
+          <EntitySet Name="ViewCarts" EntityType="Self.ViewCart" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cmis_portal_uatModelStoreContainer" CdmEntityContainer="cmis_portal_uatEntities">
+          <EntitySetMapping Name="ShoppingCarts">
+            <EntityTypeMapping TypeName="cmis_portal_uatModel.ShoppingCart">
+              <MappingFragment StoreEntitySet="ShoppingCart">
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ViewCarts">
+            <EntityTypeMapping TypeName="cmis_portal_uatModel.ViewCart">
+              <MappingFragment StoreEntitySet="ViewCart">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="UDF_CHEM_CATEGORY" ColumnName="UDF_CHEM_CATEGORY" />
+                <ScalarProperty Name="ItemCodeDesc" ColumnName="ItemCodeDesc" />
+                <ScalarProperty Name="UnitCost" ColumnName="UnitCost" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="SalesUnitOfMeasure" ColumnName="SalesUnitOfMeasure" />
+                <ScalarProperty Name="StandardLeadTime" ColumnName="StandardLeadTime" />
+                <ScalarProperty Name="CartID" ColumnName="CartID" />
+                <ScalarProperty Name="Category1" ColumnName="Category1" />
+                <ScalarProperty Name="Category2" ColumnName="Category2" />
+                <ScalarProperty Name="UDF_ENVIRONMENTAL" ColumnName="UDF_ENVIRONMENTAL" />
+                <ScalarProperty Name="UDF_FREIGHT" ColumnName="UDF_FREIGHT" />
+                <ScalarProperty Name="UDF_FUEL" ColumnName="UDF_FUEL" />
+                <ScalarProperty Name="UDF_OTHER" ColumnName="UDF_OTHER" />
+                <ScalarProperty Name="UDF_PALLET" ColumnName="UDF_PALLET" />
+                <ScalarProperty Name="UDF_HNW_CLASSIFICATION_CODE" ColumnName="UDF_HNW_CLASSIFICATION_CODE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

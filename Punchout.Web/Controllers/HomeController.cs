@@ -1,11 +1,13 @@
 ﻿using Punchout.BAL;
 using Punchout.DAL;
 using Punchout.Entities;
+using Punchout.Web.Classes;
 using Punchout.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,7 +20,7 @@ namespace Punchout.Web.Controllers
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
 
-
+        public const string CartId = "PunchOut_CartID";
         public ActionResult Index()
         {
             hw_sites objhwsite = new hw_sites();
@@ -95,10 +97,7 @@ namespace Punchout.Web.Controllers
             //TempData["Sitedesc"] = sitedesc;
             //TempData.Keep();
             List<CI_Item> getList = new List<CI_Item>();
-
             getList = objBALProductList.GetProductList(searchText, itemText, site_code, site_desc);
-
-
             return View("ProductList", getList);
         }
 
@@ -127,5 +126,43 @@ namespace Punchout.Web.Controllers
 
             return View();
         }
+        public ActionResult HSEApproval()
+        {
+            return View();
+        }
+        public string GetShoppingCartId()
+        { 
+
+            if (Session[CartId] == null)
+            {
+            
+             Session[CartId] = System.Web.HttpContext.Current.Request.IsAuthenticated ?
+                   User.Identity.Name : Guid.NewGuid().ToString();    
+            }
+            return Session[CartId].ToString();
+        }
+        public ActionResult AddToCart(string id)
+        {
+
+
+            string productId;
+            if (!String.IsNullOrEmpty(id))
+            {
+                MyShoppingCart usersShoppingCart = new MyShoppingCart();
+               String cartId = GetShoppingCartId();
+                productId = id;
+                //usersShoppingCart.AddItem(cartId, productId, 1);
+                
+            }
+            else
+            {
+                Debug.Fail("ERROR : We should never get to AddToCart.aspx without a ProductId.");
+                throw new Exception("ERROR : It is illegal to load AddToCart.aspx without setting a ProductId.");
+            }
+            // Response.Redirect("MyShoppingCart.aspx");
+        
+
+            return View();
+    }
     }
 }

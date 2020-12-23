@@ -13,7 +13,12 @@ namespace Punchout.Web.Filters
     {
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            HttpContext.Current.Session["Sitedesc"] = "Site1";
+            //HttpContext.Current.Session["Sitedesc"] = "Site1";
+            if(HttpContext.Current.Session["Sitedesc"] ==null)
+            {
+                HttpContext.Current.Session["Sitedesc"] = "Please select a site from the left.";
+            }
+
             hw_sites objhwsite = new hw_sites();
 
             DataSet ds = new DataSet();
@@ -35,6 +40,8 @@ namespace Punchout.Web.Filters
                         sitelist.Add(hwsite_obj);
                     }
                     objhwsite.siteinfo = sitelist;
+                    objhwsite.site_code = Convert.ToString(HttpContext.Current.Session["Site_Code"]);
+                    objhwsite.site_desc = Convert.ToString(HttpContext.Current.Session["Sitedesc"]);
                 }
                 con.Close();
                 filterContext.Controller.ViewData["layoutPageData"] = objhwsite;
