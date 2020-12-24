@@ -55,6 +55,25 @@ namespace Punchout.DAL
             }
         }
 
+        public DataTable GetQuantity(string cartId)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
+                SqlCommand cmd = new SqlCommand("SELECT isnull(SUM(Quantity),0) FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + cartId + "'", con);
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         public List<CI_Item> GetProductListByItemCode(string itemText, string site_code, string site_desc)
         {
             try
