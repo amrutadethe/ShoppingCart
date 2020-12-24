@@ -54,11 +54,6 @@
       <DependentUpon>MAS_CMLEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Class1.cs" />
-    <Compile Include="CMIS_Cart1.cs">
-      <DependentUpon>CMIS_Cart.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="MAS_CMLEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -118,10 +113,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CMIS_Cart.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CMIS_Cart1.cs</LastGenOutput>
-    </Content>
     <Content Include="MAS_CMLEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MAS_CMLEntities.Context.cs</LastGenOutput>
