@@ -2,6 +2,7 @@
 using Punchout.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace Punchout.BAL
         public CI_Item GetProductDetails(string id)
         {
             return objDALProductList.GetProductDetails(id);
+        }
+
+        public DataTable GetQuantity(string cartId)
+        {
+            return objDALProductList.GetQuantity(cartId);
         }
     }
 }
