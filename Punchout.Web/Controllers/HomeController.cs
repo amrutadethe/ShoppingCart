@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace Punchout.Web.Controllers
 {
@@ -20,7 +21,7 @@ namespace Punchout.Web.Controllers
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
 
-        public const string CartId = "PunchOut_CartID";
+       // public const string CartId = "PunchOut_CartID";
         public ActionResult Index()
         {
             hw_sites objhwsite = new hw_sites();
@@ -48,7 +49,7 @@ namespace Punchout.Web.Controllers
                 }
                 con.Close();
             }
-
+            
             return View(objhwsite);
         }
 
@@ -133,13 +134,13 @@ namespace Punchout.Web.Controllers
         public string GetShoppingCartId()
         { 
 
-            if (Session[CartId] == null)
+            if (Session["CartId"] == null)
             {
             
-             Session[CartId] = System.Web.HttpContext.Current.Request.IsAuthenticated ?
+             Session["CartId"] = System.Web.HttpContext.Current.Request.IsAuthenticated ?
                    User.Identity.Name : Guid.NewGuid().ToString();    
             }
-            return Session[CartId].ToString();
+            return Session["CartId"].ToString();
         }
         public ActionResult AddToCart(string id)
         {
@@ -149,9 +150,9 @@ namespace Punchout.Web.Controllers
             if (!String.IsNullOrEmpty(id))
             {
                 MyShoppingCart usersShoppingCart = new MyShoppingCart();
-               String cartId = GetShoppingCartId();
+               string cartId = GetShoppingCartId();
                 productId = id;
-                //usersShoppingCart.AddItem(cartId, productId, 1);
+                usersShoppingCart.AddItem(cartId, productId, 1);
                 
             }
             else
@@ -160,9 +161,58 @@ namespace Punchout.Web.Controllers
                 throw new Exception("ERROR : It is illegal to load AddToCart.aspx without setting a ProductId.");
             }
             // Response.Redirect("MyShoppingCart.aspx");
-        
+            return RedirectToAction("MyShoppingCart");
 
+
+        }
+        public ActionResult MyShoppingCart()
+        {
+                MyShoppingCart usersShoppingCart = new MyShoppingCart();
+                String cartId = GetShoppingCartId();
+            Session["PunchOut_CartID"] = cartId;
+                decimal cartTotal = 0;
+                cartTotal = usersShoppingCart.GetTotal(cartId);
+                if (cartTotal > 0)
+                {
+                // lblTotal.Text = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
+                ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
+            }
+                else
+                {
+                ViewBag.ShoppingCartTitle = "Shopping Cart is Empty";
+                ViewBag.lblTotal = "";
+                ViewBag.LabelTotalText = "";
+                    //LabelTotalText.Text = "";
+                    //lblTotal.Text = "";
+                    //ShoppingCartTitle.InnerText = "Shopping Cart is Empty";
+                    //UpdateBtn.Visible = false;
+                    //CheckoutBtn.Visible = false;
+            }
+
+                if (Request.UrlReferrer != null && Request.QueryString["method"] != "noadd")
+                {
+                    if (Request.UrlReferrer.ToString().Contains("ProductList") || Request.UrlReferrer.ToString().Contains("ProductDetails"))
+                    {
+                    // statusLabel.Text = "Successfully added item to shopping cart.";
+                    ViewBag.statusLabel = "Successfully added item to shopping cart.";
+                    }
+                }
+                else
+                {
+                ViewBag.statusLabel = "";
+                   // statusLabel.Text = "";
+                }
+            int numRows = 0;
+            DataTable dt = new DataTable();
+            dt = objBALProductList.GetQuantity(Session["PunchOut_CartID"].ToString());
+            if(dt.Rows.Count>0)
+            {
+                numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
+            }
+            
+            ////SiteMaster master = (SiteMaster)Page.Master;
+            //master.CartTotal = Convert.ToString(numRows);
             return View();
-    }
+        }
     }
 }

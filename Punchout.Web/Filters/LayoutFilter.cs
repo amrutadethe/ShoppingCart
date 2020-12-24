@@ -1,4 +1,5 @@
-﻿using Punchout.Web.Models;
+﻿using Punchout.BAL;
+using Punchout.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +12,7 @@ namespace Punchout.Web.Filters
 {
     public class LayoutFilter : ActionFilterAttribute
     {
+        BALProduct objBALProductList = new BALProduct();
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             //HttpContext.Current.Session["Sitedesc"] = "Site1";
@@ -44,6 +46,19 @@ namespace Punchout.Web.Filters
                     objhwsite.site_desc = Convert.ToString(HttpContext.Current.Session["Sitedesc"]);
                 }
                 con.Close();
+                //if (HttpContext.Current.Session["PunchOut_CartID"] == null)
+                //{
+                //    HttpContext.Current.Session["PunchOut_CartID"] = "PunchOut_CartID";
+                //}
+                int numRows = 0;
+               DataTable dt = new DataTable();
+                dt = objBALProductList.GetQuantity(Convert.ToString(HttpContext.Current.Session["CartId"]));
+                if (dt.Rows.Count > 0)
+                {
+                    
+                    numRows = Convert.ToInt32(dt.Rows[0][0]);
+                }
+                HttpContext.Current.Session["numrows"] = numRows.ToString();
                 filterContext.Controller.ViewData["layoutPageData"] = objhwsite;
             }
         }

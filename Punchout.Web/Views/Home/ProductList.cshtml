@@ -37,18 +37,15 @@
                             <th style="text-wrap:normal;">
                                 Lead Time (days)
                             </th>
-
                             <th>Details</th>
                             <th>Add To Cart</th>
                         </tr>
-
                         @foreach (var item in Model)
                         {
                             <tr style="background-color: #FFFBD6;color: #333333;align-content:center;">
                                 <td>
                                     @Html.DisplayFor(modelitem => item.ItemCode)
                                 </td>
-
                                 <td>
                                     @*@html.DisplayFor(modelitem => item.itemcodedesc + "--" + item.category2 + " " + item.category1)*@
                                     @{

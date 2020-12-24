@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -196,6 +202,7 @@
     <Content Include="Content\img\svg\request.svg" />
     <Content Include="Content\img\user.png" />
     <Content Include="Content\img\user.svg" />
+    <Content Include="Content\img\yellowarrow.gif" />
     <Content Include="Content\js\main.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -234,6 +241,9 @@
     <Content Include="Views\Home\ProductList.cshtml" />
     <Content Include="Views\Home\PartialLayout.cshtml" />
     <Content Include="Views\Home\ProductDetails.cshtml" />
+    <Content Include="Views\Home\AddToCart.cshtml" />
+    <Content Include="Views\Home\HSEApproval.cshtml" />
+    <Content Include="Views\Home\MyShoppingCart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
