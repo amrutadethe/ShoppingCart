@@ -1,5 +1,6 @@
 ﻿using Punchout.Entities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -67,6 +68,34 @@ namespace Punchout.Web.Classes
                     exp.Message.ToString(), exp);
                 }
                 return (cartTotal);
+            }
+        }
+
+        public void UpdateShoppingCartDatabase(string cartId, string ItemCode, string Quantity, bool Remove)
+        {
+            UpdateItem(cartId, ItemCode, Convert.ToInt32(Quantity));
+        }
+        public void UpdateItem(string cartId, string ItemCode, int Quantity)
+        {
+            using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())
+            {
+                try
+                {
+                    var myItem = (from c in db.ShoppingCarts
+                                  where c.CartID == cartId &&
+                                    c.ProductID == ItemCode
+                                  select c).FirstOrDefault();
+                    if (myItem != null)
+                    {
+                        myItem.Quantity = Quantity;
+                        db.SaveChanges();
+                    }
+                }
+                catch (Exception exp)
+                {
+                    throw new Exception("ERROR: Unable to Update Cart Item - " +
+                    exp.Message.ToString(), exp);
+                }
             }
         }
     }

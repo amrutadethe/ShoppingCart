@@ -5,183 +5,131 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div id="content">
 
-<div align="left">
-    <asp:Label ID="notifyLabel" runat="server" CssClass="NormalBold" Font-Bold="True" style="font-size:13px" Text="To update your cart, simply enter in the new quantity and click on the 'Update Your Shopping Cart' button."></asp:Label>
+
+    <div id="centerColumn">
+        <div align="left" style="margin-top:-338px; width:141%">
+            <div align="left">
+                <asp:Label ID="notifyLabel" runat="server" CssClass="NormalBold" Font-Bold="True" style="font-size:13px" Text="To update your cart, simply enter in the new quantity and click on the 'Update Your Shopping Cart' button."></asp:Label>
+                <label id="notifyLabel" class="NormalBold" style="font-size: 13px;font-weight:bold;">To update your cart, simply enter in the new quantity and click on the 'Update Your Shopping Cart' button.</label>
+            </div>
+            <div id="ShoppingCartTitle" runat="server" class="ContentHead">@ViewBag.ShoppingCartTitle</div>
+            <table cellpadding="2" cellspacing="2" border="1" class="CartListItem" width="100%" id="MyList">
+                <tr>
+
+                    <th>Item Code</th>
+                    <th>Item Desc.</th>
+                    <th>Unit of Measure</th>
+                    <th>Unit Cost</th>
+                    <th>Quantity</th>
+                    <th>Item Total</th>
+                    <th>Remove Item</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td id="lblItemCode">@item.ItemCode</td>
+                        <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
+                        <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
+                        <td id="lblUnitCost">@item.UnitCost</td>
+                        @*<td>@item.Quantity</td>*@
+                        <td id="txtQuantity">
+                            @Html.TextBoxFor(Model => item.Quantity)
+                        </td>
+
+                      
+                        <td id="lblitemtotal">
+                            @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
+            Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER)))
+                        </td>
+                        <td id="chkremove"><input type="checkbox" value="Remove" /></td>
+                    </tr>
+                }
+                @*<tr>
+                        <td align="right" colspan="6">Sum</td>
+                        <td>
+                            @{
+                                List<Item> cart = (List<Item>)Session["cart"];
+                                var total = cart.Sum(item => item.Product.Price * item.Quantity);
+                            }
+                            @total
+                        </td>
+                    </tr>*@
+            </table>
+
+
+
+            <div style="float: right">
+                <strong>
+
+                    <span id="LabelTotalText">
+                        Order Total :<label id="lblTotal" class="NormalBold">@ViewBag.lblTotal</label>
+                    </span>
+                </strong>
+            </div>
+            <div align="left">
+                <label id="statusLabel" class="NormalBold" style="color:red;">@ViewBag.statusLabel</label>
+            </div>
+            <br />
+            <div align="left">
+                <input type="submit" style="position:absolute;left:-100px;top:-100px;width:0px;height:0px;"
+                       onclick="javascript:return false;" />
+                @*<asp:imagebutton ID="Image1" runat="server"
+                    ImageUrl="Styles/Images/yellowarrow.gif"
+                    TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
+                <a href="/Home/ProductList">
+                    <img id="Image1" src="~/Content/img/yellowarrow.gif"
+                         alt="ReturnToCatalog" style="border-width: 0" />
+                </a>
+
+            </div>
+            <div align="center">
+                <a href="/Home/MyShoppingCart">
+                    @*<button type="submit" id="UpdateBtn" onclick="addMyList()">Update</button>*@ 
+                    <img id="UpdateBtn" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
+                </a>
+                &nbsp;&nbsp;
+                <a href="Home/CheckOut">
+                    <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<div id="ShoppingCartTitle" runat="server" class="ContentHead">@ViewBag.ShoppingCartTitle</div>
-<table cellpadding="2" cellspacing="2" border="1" class="CartListItem">
-    <tr>
+<script type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function addMyList() {
+        var projworkProgress = [];
+        var TrCount8 = $("#MyList tr").length;
 
-        <th>Item Code</th>
-        <th>Item Desc.</th>
-        <th>Unit of Measure</th>
-        <th>Unit Cost</th>
-        <th>Quantity</th>
-        <th>Item Total</th>
-        <th>Remove Item</th>
-    </tr>
-    @foreach (var item in Model)
-    {
-<tr>
-    
-    <td>@item.ItemCode</td>
-    <td>@item.ItemCodeDesc</td>
-    <td>@item.SalesUnitOfMeasure</td>
-    <td>@item.UnitCost</td>
-    <td>@item.Quantity</td>
+        for (var i = 0; i < TrCount8; i++) {
+            projworkProgress.push({
 
-    @*$<%# String.Format("{0:#.00}",
-    (Convert.ToDouble(Eval("Quantity")) * Convert.ToDouble(Eval("UnitCost"))) +
-    (Convert.ToDouble(Eval("Quantity")) * Convert.ToDouble(Eval("UDF_ENVIRONMENTAL"))) +
-    Convert.ToDouble(Eval("UDF_FREIGHT")) +
-    Convert.ToDouble(Eval("UDF_FUEL")) +
-    (Convert.ToDouble(Eval("Quantity")) * Convert.ToDouble(Eval("UDF_OTHER"))) +
-    (Convert.ToDouble(Eval("Quantity")) * Convert.ToDouble(Eval("UDF_OTHER"))))%>*@
-    @*@{
-        var fullname = (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL))+
-            Convert.ToDouble(item.UDF_FREIGHT)+Convert.ToDouble(item.UDF_FUEL)+(Convert.ToDouble(item.Quantity)*Convert.ToDouble(item.UDF_OTHER));
-        
-    }*@
-    <td>@((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
-            Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER)))</td>
-    <td><a href="@Url.Action("Remove", "Cart", new { id = item.ItemCode })">Remove</a></td>
-</tr>
+                ItemCode: $("#MyList tr #lblItemCode input").eq(i).val(),
+                ItemCodeDesc: $("#MyList tr #lblItemCodeDesc input").eq(i).val(),
+                SalesUnitOfMeasure: $("#MyList tr #lblSalesUnitOfMeasure input").eq(i).val(),
+                UnitCost: $("#MyList tr #lblUnitCost input").eq(i).val(),
+                Quantity: $("#MyList tr #txtQuantity input").eq(i).val(),
+                itemtotal: $("#MyList tr #lblitemtotal input").eq(i).val(),
+                Remove=$("#MyList tr #chkremove input").eq(i).val(),
+
+            });
+        }
+
+ var str = JSON.stringify(AllValue);
+
+        var str2 = JSON.stringify(projworkProgress);
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateShoppingCart", "Home")',
+            data: { str2: str2},
+            Response: ContentType = 'application/json;charset=utf-8',
+            success: function (data) {
+                   alert('Shopping Cart Updated successfully')
+
+            },
+        });
     }
-    @*<tr>
-        <td align="right" colspan="6">Sum</td>
-        <td>
-            @{
-                List<Item> cart = (List<Item>)Session["cart"];
-                var total = cart.Sum(item => item.Product.Price * item.Quantity);
-            }
-            @total
-        </td>
-    </tr>*@
-</table>
-@*<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_CHEM_CATEGORY)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ItemCodeDesc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UnitCost)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SalesUnitOfMeasure)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StandardLeadTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CartID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_ENVIRONMENTAL)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_FREIGHT)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_FUEL)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_OTHER)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_PALLET)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UDF_HNW_CLASSIFICATION_CODE)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_CHEM_CATEGORY)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemCodeDesc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalesUnitOfMeasure)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StandardLeadTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CartID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_ENVIRONMENTAL)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_FREIGHT)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_FUEL)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_OTHER)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_PALLET)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UDF_HNW_CLASSIFICATION_CODE)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-    }
-
-</table>*@
-
-<div style="float: right">
-    <strong>
-      
-        <span id="LabelTotalText">
-            Order Total :<label id="lblTotal" class="NormalBold">@ViewBag.lblTotal</label>
-        </span>
-    </strong>
-</div>
-<div align="left">
-    <label id="statusLabel" class="NormalBold">@ViewBag.statusLabel</label>
-</div>
-<br />
-<div align="left">
-    <input type="submit" style="position:absolute;left:-100px;top:-100px;width:0px;height:0px;"
-           onclick="javascript:return false;" />
-    @*<asp:imagebutton ID="Image1" runat="server"
-        ImageUrl="Styles/Images/yellowarrow.gif"
-        TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
-    <a>
-        <img id="Image1" src="~/Content/img/yellowarrow.gif"
-             alt="ReturnToCatalog" style="border-width: 0" />
-    </a>
-
-</div>
+</script>

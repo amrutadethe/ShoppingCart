@@ -179,6 +179,7 @@
     <Content Include="Content\img\down-arrow %281%29.png" />
     <Content Include="Content\img\down-arrow.png" />
     <Content Include="Content\img\fevicon.png" />
+    <Content Include="Content\img\final_checkout.gif" />
     <Content Include="Content\img\home-blue.png" />
     <Content Include="Content\img\home-white.png" />
     <Content Include="Content\img\Icon feather-search.png" />
@@ -200,6 +201,7 @@
     <Content Include="Content\img\svg\home.svg" />
     <Content Include="Content\img\svg\reports.svg" />
     <Content Include="Content\img\svg\request.svg" />
+    <Content Include="Content\img\update_cart.gif" />
     <Content Include="Content\img\user.png" />
     <Content Include="Content\img\user.svg" />
     <Content Include="Content\img\yellowarrow.gif" />
