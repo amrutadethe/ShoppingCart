@@ -32,5 +32,10 @@ namespace Punchout.BAL
         {
             return objDALProductList.GetQuantity(cartId);
         }
+
+        public List<ViewCart> GetMyShoopingCartList(string CartId)
+        {
+            return objDALProductList.GetMyShoopingCartList(CartId);
+        }
     }
 }
