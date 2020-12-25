@@ -55,6 +55,51 @@ namespace Punchout.DAL
             }
         }
 
+        public List<ViewCart> GetMyShoopingCartList(string cartId)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#");
+                SqlCommand cmd = new SqlCommand("select * from ViewCart where  CartID = '" + cartId + "' ", con);
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                var allProductList = new List<ViewCart>();
+                if (dt.Rows.Count > 0)
+                {
+                    
+                    allProductList = dt.AsEnumerable().Select(rows => new ViewCart
+                    {
+                        ItemCode = Convert.ToString(rows["ItemCode"]),
+                        UDF_CHEM_CATEGORY = Convert.ToString(rows["UDF_CHEM_CATEGORY"]),
+                        ItemCodeDesc = Convert.ToString(rows["ItemCodeDesc"]),
+                        UnitCost = Convert.ToDecimal(rows["UnitCost"]),
+                        Quantity = Convert.ToInt32(rows["Quantity"]),
+                        SalesUnitOfMeasure = Convert.ToString(rows["SalesUnitOfMeasure"]),
+
+                     //   StandardLeadTime = Convert.ToDecimal(rows["StandardLeadTime"],
+                      StandardLeadTime=  decimal.Parse((rows["StandardLeadTime"] == null || rows["StandardLeadTime"].ToString() == String.Empty) ? "0" : rows["StandardLeadTime"].ToString()),
+                    CartID = Convert.ToString(rows["CartID"]),
+                        Category1 = Convert.ToString(rows["Category1"]),
+                        Category2 = Convert.ToString(rows["Category2"]),
+                        UDF_ENVIRONMENTAL= Convert.ToDecimal(rows["UDF_ENVIRONMENTAL"]),
+                        UDF_FREIGHT= Convert.ToDecimal(rows["UDF_FREIGHT"]),
+                        UDF_FUEL= Convert.ToDecimal(rows["UDF_FUEL"]),
+                        UDF_OTHER= Convert.ToDecimal(rows["UDF_OTHER"]),
+                        UDF_PALLET= Convert.ToDecimal(rows["UDF_PALLET"]),
+                        UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(rows["UDF_HNW_CLASSIFICATION_CODE"]),
+                    }).ToList();
+                }
+                return allProductList;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
         public DataTable GetQuantity(string cartId)
         {
             try
