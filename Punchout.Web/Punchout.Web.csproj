@@ -168,6 +168,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\style_new.css" />
     <Content Include="Content\fonts\Glyphter.svg" />
     <Content Include="Content\img\add.svg" />
     <Content Include="Content\img\add_to_cart.gif" />
@@ -206,6 +207,7 @@
     <Content Include="Content\img\user.svg" />
     <Content Include="Content\img\yellowarrow.gif" />
     <Content Include="Content\js\main.js" />
+    <Content Include="Content\js\main_new.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -246,6 +248,8 @@
     <Content Include="Views\Home\AddToCart.cshtml" />
     <Content Include="Views\Home\HSEApproval.cshtml" />
     <Content Include="Views\Home\MyShoppingCart.cshtml" />
+    <Content Include="Views\Shared\_LayoutInner.cshtml" />
+    <Content Include="Views\Shared\_LeftNavigation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

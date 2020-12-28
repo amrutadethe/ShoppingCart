@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width" />
     <title></title>
     @*@Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")*@
+        @Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
     @if (Model.siteinfo != null)
@@ -14,12 +14,10 @@
         <div>
             @using (Html.BeginForm("ProductList", "Home", FormMethod.Post, new { @name = "Form1" }))
             {
-
                 <div class="row">
                     Select Site:
                 </div>
                 <div class="row">
-
                     @Html.DropDownListFor(m => m.site_code, new SelectList(Model.siteinfo, "site_code", "site_desc"), "--Select Site--", htmlAttributes: new { @class = "form-control", id = "ddlSite" })
                     @Html.Hidden("site_desc", null, new { @id = "hfsite_desc" })
                 </div>
@@ -42,18 +40,13 @@
                     @*<input type="button"
                         value="Go Somewhere Else"
                         onclick="location.href='<%: Url.Action(" Action", "Controller" ) %>'" />*@
-
                     <button type="submit" id="search" @*onclick="GetData()"*@>Search</button>
                     @*<input type="button" value="Search" onclick="location.href='<%:Url.Action(" ProductListByItemCode","Home")%>'"/>*@
-
                 </div>
-
-
                 <br />
                 <div class="row">
                     Show all products for your site
                 </div>
-
                 <div class="row">
                     <input type="submit" value="Show All" />
                 </div>
@@ -61,15 +54,14 @@
             <br />
             <div id="dvPassport" style="display: none">
                 <div class="row">
-                  
                     Cancel Shopping
                 </div>
                 <div class="row">
                     <input type="button" value="Cancel" onclick="myFunction()" />
-
                 </div>
             </div>
         </div>
+
         <script type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {

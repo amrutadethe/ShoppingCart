@@ -1,0 +1,29 @@
+﻿
+<ul class="nav main-menu">
+    <li class="nav-item">
+        <a id="lnkHome" class="home nav-link" href="@Url.Content("~/Home/Index")">
+            <span>Home</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a id="lnkReport" class="reports nav-link" href="@Url.Content("~/Home/HSEApproval")">
+            <span> New Item Additions </span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a id="lnkCatalog" class="nav-link catalog" href="#">
+            <span>New Link</span>
+        </a>
+    </li>
+</ul>
+<script src="~/Content/vendor/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //debugger;
+        var pageControl = this.baseURI.split('/')[3];
+        if (pageControl != "TaskList") {
+            $(".nav-item").parent().removeClass("active");
+            $('#lnk' + pageControl).parent().addClass('active');
+        }
+    });
+</script>
