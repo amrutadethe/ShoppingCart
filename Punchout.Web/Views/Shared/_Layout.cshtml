@@ -25,11 +25,16 @@
                 <br /><br />
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr style="vertical-align:middle;">
-                        <td align="center" style="width:65px;"><a href="~/MyShoppingCart?method=noadd" runat="server" class="SiteLinkBold"><img src="~/Content/img/cart.gif" alt="" runat="server" /><br />Cart</a></td>
+                        <td align="center" style="width:65px;">
+                            <a href='@Url.Action("MyShoppingCart", "Home", new {method="noadd"})'>
+                                <img src="~/Content/img/cart.gif" alt="" runat="server" /><br />
+                            </a>
+                            <div style="color:white;">Cart</div>
+                        </td>
                     </tr>
                 </table>
                 <div class="cartContent" style="float: right; margin-right:26px;">
-                   (@Session["numrows"])
+                   (@Session["numrows"] Items)
                 </div>
             </div>
         </div>

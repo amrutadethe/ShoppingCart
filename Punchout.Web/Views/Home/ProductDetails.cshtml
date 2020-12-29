@@ -18,30 +18,30 @@
                         var ItemDesc = Model.ItemCodeDesc + "--" + Model.Category2 + " " + Model.Category1;
                         @Html.DisplayFor(Model => ItemDesc)
                     }
-                    </div>
-                    <table border="0">
-                        <tr>
-                            <td style="vertical-align:top;">
+                </div>
+                <table border="0">
+                    <tr>
+                        <td style="vertical-align:top;">
 
-                                @{
-                                    string image = ProductImageUrl + Model.Category1 + ".jpg";
-                                }
-                                @Html.Image("categoryImage", image, "Product Image")
-                            </td>
-                            <td style="vertical-align: top">
-                                @{
-                                    var description = Model.ItemCodeDesc + "--" + Model.Category2;
-                                    @Html.DisplayFor(Model => description)
-                                }
-                                @{
-                                    var manufacture = "Manufacturer:" + Model.UDF_MANUFACT;
-                                    @Html.DisplayFor(Model => manufacture)
-                                }
-                                <br /><br /><br /><br />
-                            </td>
-                        </tr>
-                    </table>
-               
+                            @{
+                                string image = ProductImageUrl + Model.Category1 + ".jpg";
+                            }
+                            @Html.Image("categoryImage", image, "Product Image")
+                        </td>
+                        <td style="vertical-align: top">
+                            @{
+                                var description = Model.ItemCodeDesc + "--" + Model.Category2;
+                                @Html.DisplayFor(Model => description)
+                            }
+                            @{
+                                var manufacture = "Manufacturer:" + Model.UDF_MANUFACT;
+                                @Html.DisplayFor(Model => manufacture)
+                            }
+                            <br /><br /><br /><br />
+                        </td>
+                    </tr>
+                </table>
+
                 @*</div>
 
                     <dl>
@@ -63,22 +63,24 @@
 
                     </dl>
         </div>*@
-            <span class="UnitCost">
-                @{
-                    var Price = "Your Price:" +Convert.ToString(Model.StandardUnitPrice);
-                    @Html.DisplayFor(Model => Price)
-                }
-            </span>
-                <br /><a href='AddToCart.aspx' style="border: 0 none white">
+                <span class="UnitCost">
+                    @{
+                        var Price = "Your Price:" + Convert.ToString(Model.StandardUnitPrice);
+                        @Html.DisplayFor(Model => Price)
+                    }
+                </span>
+                <br />
+                <a href='@Url.Action("AddToCart", "Home", new { id = Model.ItemCode })'>
                     <img id="Img1" src="~/Content/img/add_to_cart.gif" runat="server"
                          alt="Add To Cart" style="border-width: 0" />
-                </a><br /><br />
+                </a>
+                <br /><br />
                 @*<div>
 
-                    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-                    @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+            @Html.ActionLink("Back to List", "Index")
 
-                </div>*@
+        </div>*@
             </div>
     </div>
 

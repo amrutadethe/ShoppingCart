@@ -10,5 +10,7 @@ namespace Punchout.Web.Models
         public string site_code { get; set; }
         public string site_desc { get; set; }
         public List<hw_sites> siteinfo { get; set; }
+
+       
     }
 }

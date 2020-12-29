@@ -97,11 +97,13 @@ namespace Punchout.Web.Controllers
         public ActionResult ProductList(string searchText, string itemText, string site_code, string site_desc)
         {
             Session["Sitedesc"] = site_desc;
-            Session["Site_Code"] = site_code;
+            if(Session["Site_Code"]==null)
+                Session["Site_Code"] = site_code;
             //TempData["Sitedesc"] = sitedesc;
             //TempData.Keep();
             List<CI_Item> getList = new List<CI_Item>();
-            getList = objBALProductList.GetProductList(searchText, itemText, site_code, site_desc);
+
+            getList = objBALProductList.GetProductList(searchText, itemText, Convert.ToString(Session["Site_Code"]), site_desc);
             return View("ProductList", getList);
         }
 
@@ -150,8 +152,6 @@ namespace Punchout.Web.Controllers
 
         public ActionResult AddToCart(string id)
         {
-
-
             string productId;
             if (!String.IsNullOrEmpty(id))
             {
@@ -166,10 +166,8 @@ namespace Punchout.Web.Controllers
                 Debug.Fail("ERROR : We should never get to AddToCart.aspx without a ProductId.");
                 throw new Exception("ERROR : It is illegal to load AddToCart.aspx without setting a ProductId.");
             }
-            // Response.Redirect("MyShoppingCart.aspx");
             return RedirectToAction("MyShoppingCart");
         }
-
         public ActionResult MyShoppingCart()
         {
             MyShoppingCart usersShoppingCart = new MyShoppingCart();
@@ -179,33 +177,25 @@ namespace Punchout.Web.Controllers
             cartTotal = usersShoppingCart.GetTotal(cartId);
             if (cartTotal > 0)
             {
-                // lblTotal.Text = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
                 ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
+                ViewBag.ShoppingCartTitle = "Shopping Cart";
             }
             else
             {
                 ViewBag.ShoppingCartTitle = "Shopping Cart is Empty";
                 ViewBag.lblTotal = "";
                 ViewBag.LabelTotalText = "";
-                //LabelTotalText.Text = "";
-                //lblTotal.Text = "";
-                //ShoppingCartTitle.InnerText = "Shopping Cart is Empty";
-                //UpdateBtn.Visible = false;
-                //CheckoutBtn.Visible = false;
             }
-
             if (Request.UrlReferrer != null && Request.QueryString["method"] != "noadd")
             {
                 if (Request.UrlReferrer.ToString().Contains("ProductList") || Request.UrlReferrer.ToString().Contains("ProductDetails"))
                 {
-                    // statusLabel.Text = "Successfully added item to shopping cart.";
                     ViewBag.statusLabel = "Successfully added item to shopping cart.";
                 }
             }
             else
             {
                 ViewBag.statusLabel = "";
-                // statusLabel.Text = "";
             }
             int numRows = 0;
             DataTable dt = new DataTable();
@@ -215,28 +205,8 @@ namespace Punchout.Web.Controllers
                 numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
             }
             var getCartitem = objBALProductList.GetMyShoopingCartList(Convert.ToString(Session["CartId"]));
-            ////SiteMaster master = (SiteMaster)Page.Master;
-            //master.CartTotal = Convert.ToString(numRows);
             return View("MyShoppingCart", getCartitem);
         }
-
-        //public ActionResult UpdateShoppingCart()
-        //{
-        //    MyShoppingCart usersShoppingCart = new MyShoppingCart();
-        //    String cartId = GetShoppingCartId();
-        //    ShoppingCartUpdates[] cartUpdates = new ShoppingCartUpdates[sess];
-        //    for (int i = 0; i < MyList.Rows.Count; i++)
-        //    {
-        //        IOrderedDictionary rowValues = new OrderedDictionary();
-        //        rowValues = GetValues(MyList.Rows[i]);
-        //        cartUpdates[i].ItemCode = Convert.ToString(rowValues["ItemCode"]);
-        //        cartUpdates[i].PurchaseQuantity = Convert.ToInt32(rowValues["Quantity"]);
-        //        CheckBox cbRemove = new CheckBox();
-        //        cbRemove = (CheckBox)MyList.Rows[i].FindControl("Remove");
-        //        cartUpdates[i].RemoveItem = cbRemove.Checked;
-        //    }
-        //    return View();
-        //}
         public ActionResult UpdateShoppingCart(string str2)
         {
             MyShoppingCart usersShoppingCart = new MyShoppingCart();
@@ -246,10 +216,6 @@ namespace Punchout.Web.Controllers
             {
                 if (Convert.ToString(list1.Rows[i]["ItemCode"]) != "")
                 {
-                    //hInputPara.Add("@ItemCode", Convert.ToString(list1.Rows[i]["ItemCode"]));
-                    //hInputPara.Add("@Quantity", Convert.ToString(list1.Rows[i]["Quantity"]));
-                    //hInputPara.Add("@Remove", Convert.ToString(list1.Rows[i]["Remove"]));
-                    // var result = sqlDataAccess.ExecuteStoreProcedure("usp_InsertCompPropNew", hInputPara);
                     usersShoppingCart.UpdateShoppingCartDatabase(cartId, Convert.ToString(list1.Rows[i]["ItemCode"]), Convert.ToString(list1.Rows[i]["Quantity"]), Convert.ToBoolean(list1.Rows[i]["Remove"]));
                 }
             }
@@ -263,6 +229,34 @@ namespace Punchout.Web.Controllers
                 numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
             }
             return Json(new { success = true, Message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult CancelSite()
+            {
+            // Need to clear out the session var
+            Session["Sitedesc"] = null;
+            Session["Site_Code"] = null;
+            // Remove all entries from the user's shopping cart
+            // Now that we are all done, we need to clear out this user's shopping cart
+            string deleteString = "DELETE FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
+        int numRows1 = 0;
+            //using (SqlConnection condel = new SqlConnection("Data Source=massql\\massql;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
+            using (SqlConnection condel = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+            {
+                SqlCommand com3 = new SqlCommand(deleteString, condel);
+                try
+                {
+                    condel.Open();
+                    numRows1 = com3.ExecuteNonQuery();
+                    condel.Close();
+                }
+                catch (Exception ex)
+{
+    Response.Write("SQL ERROR: " + ex.Message);
+}
+            }
+
+            //  Response.Redirect(VirtualPathUtility.ToAbsolute("~/Default.aspx"));
+            return RedirectToAction("Index");
         }
     }
 }

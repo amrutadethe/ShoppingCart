@@ -28,24 +28,24 @@
                 </tr>
                 @foreach (var item in Model)
                 {
-                    <tr>
+            <tr>
 
-                        <td id="lblItemCode">@item.ItemCode</td>
-                        <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
-                        <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
-                        <td id="lblUnitCost">@item.UnitCost</td>
-                        @*<td>@item.Quantity</td>*@
-                        <td id="txtQuantity">
-                            @Html.TextBoxFor(Model => item.Quantity)
-                        </td>
+                <td id="lblItemCode">@item.ItemCode</td>
+                <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
+                <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
+                <td id="lblUnitCost">@item.UnitCost</td>
+                @*<td>@item.Quantity</td>*@
+                <td id="txtQuantity">
+                    @Html.TextBoxFor(Model => item.Quantity)
+                </td>
 
-                      
-                        <td id="lblitemtotal">
-                            @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
+
+                <td id="lblitemtotal">
+                    @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
             Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER)))
-                        </td>
-                        <td id="chkremove"><input type="checkbox" value="Remove" /></td>
-                    </tr>
+                </td>
+                <td id="chkremove"><input type="checkbox" /></td>
+            </tr>
                 }
                 @*<tr>
                         <td align="right" colspan="6">Sum</td>
@@ -77,19 +77,18 @@
                 <input type="submit" style="position:absolute;left:-100px;top:-100px;width:0px;height:0px;"
                        onclick="javascript:return false;" />
                 @*<asp:imagebutton ID="Image1" runat="server"
-                    ImageUrl="Styles/Images/yellowarrow.gif"
-                    TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
-                <a href="/Home/ProductList">
+        ImageUrl="Styles/Images/yellowarrow.gif"
+        TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
+                <a href='@Url.Action("ProductList", "Home", new { searchText = "",itemText="" ,site_code=Session["Site_Code"],site_desc=Session["Sitedesc"]})'>
                     <img id="Image1" src="~/Content/img/yellowarrow.gif"
                          alt="ReturnToCatalog" style="border-width: 0" />
                 </a>
 
             </div>
             <div align="center">
-                <a href="/Home/MyShoppingCart">
-                    @*<button type="submit" id="UpdateBtn" onclick="addMyList()">Update</button>*@ 
-                    <img id="UpdateBtn" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
-                </a>
+               
+                <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart"   onclick="addMyList()" />
+               
                 &nbsp;&nbsp;
                 <a href="Home/CheckOut">
                     <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
@@ -104,31 +103,29 @@
         var projworkProgress = [];
         var TrCount8 = $("#MyList tr").length;
 
-        for (var i = 0; i < TrCount8; i++) {
+        for (var i = 0; i < TrCount8-1; i++) {
             projworkProgress.push({
-
-                ItemCode: $("#MyList tr #lblItemCode input").eq(i).val(),
-                ItemCodeDesc: $("#MyList tr #lblItemCodeDesc input").eq(i).val(),
-                SalesUnitOfMeasure: $("#MyList tr #lblSalesUnitOfMeasure input").eq(i).val(),
-                UnitCost: $("#MyList tr #lblUnitCost input").eq(i).val(),
                 Quantity: $("#MyList tr #txtQuantity input").eq(i).val(),
-                itemtotal: $("#MyList tr #lblitemtotal input").eq(i).val(),
-                Remove=$("#MyList tr #chkremove input").eq(i).val(),
+                ItemCode: $("#MyList tr #lblItemCode").eq(i).text(),
+                Remove: $("#MyList tr #chkremove input[type='checkbox']").eq(i).is(':checked')
+                //ItemCodeDesc: $("#MyList tr #lblItemCodeDesc input").eq(i).val(),
+             //   SalesUnitOfMeasure: $("#MyList tr #lblSalesUnitOfMeasure input").eq(i).val(),
+               // UnitCost: $("#MyList tr #lblUnitCost input").eq(i).val(),
+             //   itemtotal: $("#MyList tr #lblitemtotal input").eq(i).val(),
 
             });
         }
 
- var str = JSON.stringify(AllValue);
 
         var str2 = JSON.stringify(projworkProgress);
+
         $.ajax({
             type: "POST",
             url: '@Url.Action("UpdateShoppingCart", "Home")',
             data: { str2: str2},
             Response: ContentType = 'application/json;charset=utf-8',
             success: function (data) {
-                   alert('Shopping Cart Updated successfully')
-
+                window.location.reload();
             },
         });
     }

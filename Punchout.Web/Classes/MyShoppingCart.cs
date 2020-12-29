@@ -70,10 +70,41 @@ namespace Punchout.Web.Classes
                 return (cartTotal);
             }
         }
-
         public void UpdateShoppingCartDatabase(string cartId, string ItemCode, string Quantity, bool Remove)
         {
-            UpdateItem(cartId, ItemCode, Convert.ToInt32(Quantity));
+            if (Convert.ToInt32(Quantity) < 1 || Remove == true)
+            {
+                RemoveItem(cartId, ItemCode);
+
+            }
+            else
+            {
+                UpdateItem(cartId, ItemCode, Convert.ToInt32(Quantity));
+            }
+        }
+        public void RemoveItem(string cartID, string productID)
+        {
+            using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())
+            {
+                try
+                {
+                    var myItem = (from c in db.ShoppingCarts
+                                  where c.CartID == cartID &&
+                                      c.ProductID == productID
+                                  select c).FirstOrDefault();
+                    if (myItem != null)
+                    {
+                        db.ShoppingCarts.Remove(myItem);
+                        db.SaveChanges();
+                    }
+                    HttpContext.Current.Session["CartTotal"] = Convert.ToInt16(HttpContext.Current.Session["CartTotal"]) - 1;
+                }
+                catch (Exception exp)
+                {
+                    throw new Exception("ERROR: Unable to Remove Cart Item - " +
+                    exp.Message.ToString(), exp);
+                }
+            }
         }
         public void UpdateItem(string cartId, string ItemCode, int Quantity)
         {
