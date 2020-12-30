@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.foundation.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.semanticui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     @*<link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">*@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
@@ -32,7 +33,7 @@
     <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css">
     <!-- Template Main CSS File -->
     <link href="~/Content/css/style_new.css" rel="stylesheet">
-
+    <link href="~/Content/css/style_layout.css" rel="stylesheet">
     <style>
         td.details-control {
             background: url('http://www.datatables.net/examples/resources/details_open.png') no-repeat center center;
@@ -63,46 +64,77 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="middle-wrapper">
-                        <div class="middle-top-header d-md-flex">
-                            <div class="logo mr-auto">
-                                <img src="~/Content/img/logo.png"> <span style=" color: #32689A; font-size: 25px; font-weight: bold;"> Mays PunchOut Catalog </span>
+
+                        @*<div class="middle-top-header d-md-flex">*@
+                        <header>
+                            <h5>Mays PunchOut Catalog</h5>
+                          
+                        </header>
+                        <div style="border-bottom:1px solid lightgrey" class="login-cart">
+                            <div>
+                                Welcome HoneyWell User. Your Site is @Session["Sitedesc"]
                             </div>
-                            <div class="mr-auto d-sm-none d-xl-block" style="margin-right:400px !important;">
-                                <h3 class="sub-heading"> Welcome Honeywell user. Your site is @Session["Sitedesc"] </h3>
-                                <p> xyz </p>
-                            </div>
-                            @*<div class="my-account-wrap clearfix">
-                                    <div class="my-account float-right mr-3 mt-3">
-                                        <span>My Account</span>
-                                        <span><a href="#"><img src="~/Content/img/user.svg"></a></span>
+                            <div>
+                                <div class="login-cart">
+                                    <div>
+
                                     </div>
-                                </div>*@
-                            <div class="my-account-wrap clearfix">
-                                <div class="my-account float-right mr-3 mt-3">
-                                    <span>My Account</span>
-                                    <a class="menu-toggle" href='#'><span><img src="~/Content/img/user.svg"></span></a>
-                                    <div class="menu-toggle-wrap">
-                                        <ul>
-                                            <li><a href="#" id="lnkLogout">Logout</a></li>
-                                            @*<li><a href="#">Change Password</a></li>
-                                                <li><a href="#">Lorem</a></li>*@
-                                        </ul>
+                                    <div style="display:flex;">
+                                        <div class="my-account-wrap clearfix" style="float:right;">
+                                            <div class="my-account float-right mr-3 mt-3">
+                                                <span>My Account</span>
+                                                <a class="menu-toggle" href='#'><span><img src="~/Content/img/user.svg"></span></a>
+                                                <div class="menu-toggle-wrap">
+                                                    <ul>
+                                                        <li><a href="#" id="lnkLogout">Logout</a></li>
+                                                        @*<li><a href="#">Change Password</a></li>*@
+                                                        @*<li><a href="#">Lorem</a></li>*@
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="cart">
+                                            <a href='@Url.Action("MyShoppingCart", "Home", new {method="noadd"})'><i class="fa fa-shopping-cart cart-color" style="font-size:24px"></i></a> 
+                                            <div class="cartContent" style="float: right;">
+                                                 Cart (@Session["numrows"] Items)
+                                            </div>
+                                        </div>
+                                       
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            @{
-                                Html.RenderPartial("PartialLayout", Model);
-                            }
-                        </div>
-                        <div>
-                            @RenderBody()
-                            <hr />
-                            <footer>
-                                <p>Copyright © 2020 ChemicoMays, LLC</p>
-                            </footer>
-                        </div>
+                            <!--<div class="logo mr-auto">
+                                <img src="~/Content/img/logo.png"> <span style=" color: #32689A; font-size: 25px; font-weight: bold;"> Mays PunchOut Catalog </span>
+                            </div>
+                            <div class="mr-auto d-sm-none d-xl-block" style="margin-right:400px !important;">
+                                <h3 class="sub-heading"> Welcome Honeywell user. Your site is @Session["Sitedesc"] </h3>-->
+                                @*<p> xyz </p>*@
+                            <!--</div>-->
+                            @*<div class="my-account-wrap clearfix">
+                <div class="my-account float-right mr-3 mt-3">
+                    <span>My Account</span>
+                    <span><a href="#"><img src="~/Content/img/user.svg"></a></span>
+                </div>
+            </div>*@
+                    
+
+                            
+                            @*</div>*@
+                            <section>
+                                @{
+                                    Html.RenderPartial("PartialLayout", Model);
+                                }
+                            </section>
+                            <div>
+                                @RenderBody()
+                                <hr />
+                                <footer>
+                                    <p>Copyright © 2020 ChemicoMays, LLC</p>
+                                </footer>
+                            </div>
                     </div>
                 </div>
             </div>

@@ -44,7 +44,7 @@
                 &nbsp;&nbsp;
                 @Html.ActionLink("New Item Additions", "HSEApproval", "Home")
                 <h2>
-                    Welcome Honeywell user.  Your site is @Session["Sitedesc"]
+                    Welcome Honeywell user.  Your site @(Model.site_desc)
                     @*@Model.site_desc*@
 
                     @*<% if (Session["SiteDesc"] == null)
@@ -68,7 +68,7 @@
             </div>
             <div id="leftColumn">
                 @{
-                    Html.RenderPartial("PartialLayout", Model);
+                    Html.RenderPartial("PartialLayout_old", Model);
                 }
                 @*@RenderPage("~/Views/Home/PartialLayoutList.cshtml")*@
             </div>

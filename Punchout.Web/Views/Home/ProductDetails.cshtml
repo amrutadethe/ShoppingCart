@@ -2,14 +2,15 @@
 
 @{
     ViewBag.Title = "Product Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInner.cshtml";
     string ProductImageUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["productImageUrl"]);
 }
 
 <div id="content">
     <div id="centerColumn">
 
-        <div align="left" style="margin-top:-414px;">
+        <div>
             <div>
                 <h2></h2>
 

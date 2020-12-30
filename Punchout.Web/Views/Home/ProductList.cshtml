@@ -1,15 +1,19 @@
-﻿@model IEnumerable<Punchout.Entities.CI_Item>
-
+﻿@model Punchout.Web.Models.ProductListViewModel
+@using PagedList.Mvc
+@*@model PagedList.IPagedList<Punchout.Entities.CI_Item>*@
+@*@model Punchout.Web.Models.PagerModel*@
 @{
     ViewBag.Title = "ProductList";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+  //  Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInner.cshtml";
+
 }
 
 <div id="content">
 
     <div id="centerColumn">
-        <div align="left" style="margin-top:-414px; width:140%;">
-            <h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.Count() Items Found</h3>
+        <div>
+            <h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.totalProductCount Items Found</h3>
             <p class="NormalRed">
                 These are the approved HS&E items for your site. To add items to your approved list, please use the link above.
             </p>
@@ -38,7 +42,7 @@
                             <th>Details</th>
                             <th>Add To Cart</th>
                         </tr>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.productList)
                         {
                             <tr style="background-color: #FFFBD6;color: #333333;align-content:center;">
                                 <td>
@@ -69,7 +73,44 @@
                             </tr>
                         }
                     </table>
+
+                    Page@(Model.productList.PageCount < Model.productList.PageNumber ? 0 : Model.productList.PageNumber) of @Model.productList.PageCount
+                    @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))
+
+                    <!-- pager -->
+                    @*@if (Model.Pager.EndPage > 1)
+                        {
+                            <ul class="pagination">
+                                @if (Model.Pager.CurrentPage > 1)
+                                {
+                                    <li>
+                                        <a href="~/Home/Index">First</a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Home/Index?page=@(Model.Pager.CurrentPage - 1)">Previous</a>
+                                    </li>
+                                }
+
+                                @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+                                {
+                                    <li class="@(page == Model.Pager.CurrentPage ? "active" : "")">
+                                        <a href="~/Home/Index?page=@page">@page</a>
+                                    </li>
+                                }
+
+                                @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+                                {
+                                    <li>
+                                        <a href="~/Home/Index?page=@(Model.Pager.CurrentPage + 1)">Next</a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Home/Index?page=@(Model.Pager.TotalPages)">Last</a>
+                                    </li>
+                                }
+                            </ul>
+                        }*@
                 </div>
+
             </div>
         </div>
     </div>
