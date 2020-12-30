@@ -83,11 +83,11 @@ namespace Punchout.DAL
                     CartID = Convert.ToString(rows["CartID"]),
                         Category1 = Convert.ToString(rows["Category1"]),
                         Category2 = Convert.ToString(rows["Category2"]),
-                        UDF_ENVIRONMENTAL= Convert.ToDecimal(rows["UDF_ENVIRONMENTAL"]),
-                        UDF_FREIGHT= Convert.ToDecimal(rows["UDF_FREIGHT"]),
-                        UDF_FUEL= Convert.ToDecimal(rows["UDF_FUEL"]),
-                        UDF_OTHER= Convert.ToDecimal(rows["UDF_OTHER"]),
-                        UDF_PALLET= Convert.ToDecimal(rows["UDF_PALLET"]),
+                        UDF_ENVIRONMENTAL=decimal.Parse((rows["UDF_ENVIRONMENTAL"]==null || rows["UDF_ENVIRONMENTAL"].ToString()==string.Empty)?"0" : rows["UDF_ENVIRONMENTAL"].ToString()),
+                        UDF_FREIGHT = decimal.Parse((rows["UDF_FREIGHT"] == null || rows["UDF_FREIGHT"].ToString() == string.Empty) ? "0" : rows["UDF_FREIGHT"].ToString()),
+                        UDF_FUEL = decimal.Parse((rows["UDF_FUEL"] == null || rows["UDF_FUEL"].ToString() == string.Empty) ? "0" : rows["UDF_FUEL"].ToString()),
+                        UDF_OTHER = decimal.Parse((rows["UDF_OTHER"] == null || rows["UDF_OTHER"].ToString() == string.Empty) ? "0" : rows["UDF_OTHER"].ToString()),
+                        UDF_PALLET = decimal.Parse((rows["UDF_PALLET"] == null || rows["UDF_PALLET"].ToString() == string.Empty) ? "0" : rows["UDF_PALLET"].ToString()),
                         UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(rows["UDF_HNW_CLASSIFICATION_CODE"]),
                     }).ToList();
                 }
