@@ -126,12 +126,12 @@ namespace Punchout.DAL
                 DataTable dt = new DataTable();
                 //SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
                 SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0 and ItemCode Like @itemText  and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site ", con);
+                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0  and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site ", con);
                 //cmd.Parameters.AddWithValue("@searchText",searchText);
                 //cmd.Parameters.AddWithValue("@itemText",ItemText);
                 //cmd.Parameters.AddWithValue("@Site", site);
                 //cmd.Parameters.AddWithValue("@searchText", string.Format("%{0}%", searchText));
-                cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", itemText));
+                //cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", itemText));
                 cmd.Parameters.AddWithValue("@Site", string.Format("%{0}%", site_code));
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
