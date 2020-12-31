@@ -18,7 +18,7 @@ namespace Punchout.Web.Filters
             //HttpContext.Current.Session["Sitedesc"] = "Site1";
             if(HttpContext.Current.Session["Sitedesc"] ==null)
             {
-                HttpContext.Current.Session["Sitedesc"] = "Please select a site from the left.";
+                HttpContext.Current.Session["Sitedesc"] = "Please select a site";
             }
 
             hw_sites objhwsite = new hw_sites();

@@ -14,19 +14,19 @@
     <div id="centerColumn">
         <div>
             <h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.totalProductCount Items Found</h3>
-            <p class="NormalRed">
+            <p class="NormalRed" >
                 These are the approved HS&E items for your site. To add items to your approved list, please use the link above.
             </p>
             <div class="table-responsive">
-                <div id="partialDiv">
+                <div id="partialDiv" class="middle-bottom-content-inner">
                     @*@Html.Partial("ProductList_partial", Model);*@
-                    <table class="table" style="border-style:ridge;">
-                        <tr style="background-color: #990000; font-weight:bold; color:white;text-align-last:center;">
+                    <table class="table tftable middle-bottom-content-inner">
+                        <tr style="background: -webkit-linear-gradient(top, #4184c3 0%,#254562 100%);font-weight: bold;color: white;">
                             <th>
                                 Item Code
                             </th>
 
-                            <th>
+                            <th style="width:250px">
                                 Item Description
                             </th>
                             <th>
@@ -41,10 +41,11 @@
                             </th>
                             <th>Details</th>
                             <th>Add To Cart</th>
+                            
                         </tr>
                         @foreach (var item in Model.productList)
                         {
-                            <tr style="background-color: #FFFBD6;color: #333333;align-content:center;">
+                            <tr style="background-color: white;color: #333333;align-content:center;">
                                 <td>
                                     @Html.DisplayFor(modelitem => item.ItemCode)
                                 </td>
@@ -72,7 +73,7 @@
                                 </td>
                             </tr>
                         }
-                    </table>
+                    </table> fvg
 
                     Page@(Model.productList.PageCount < Model.productList.PageNumber ? 0 : Model.productList.PageNumber) of @Model.productList.PageCount
                     @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))

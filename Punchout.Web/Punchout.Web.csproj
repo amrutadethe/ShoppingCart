@@ -134,7 +134,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\CustomHtmlHelper.cs" />
     <Compile Include="Classes\MyShoppingCart.cs" />
-    <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\LayoutFilter.cs" />
     <Compile Include="Global.asax.cs">
@@ -186,7 +185,10 @@
     <Content Include="Content\img\cart.gif" />
     <Content Include="Content\img\catalog-blue.png" />
     <Content Include="Content\img\catalog-white.png" />
+    <Content Include="Content\img\ChemicoLLC_Logo.png" />
     <Content Include="Content\img\chemicoMaysLogoBlue.gif" />
+    <Content Include="Content\img\Chemico_Logo – 2.png" />
+    <Content Include="Content\img\Chemico_Logo – 3.png" />
     <Content Include="Content\img\down-arrow %281%29.png" />
     <Content Include="Content\img\down-arrow.png" />
     <Content Include="Content\img\fevicon.png" />
@@ -262,10 +264,10 @@
     <Content Include="Views\Shared\_LayoutInner.cshtml" />
     <Content Include="Views\Shared\_LeftNavigation.cshtml" />
     <Content Include="Views\Home\PartialLayout_old.cshtml" />
+    <Content Include="Views\Home\CheckOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\CheckOut\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

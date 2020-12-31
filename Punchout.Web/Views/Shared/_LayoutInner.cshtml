@@ -20,13 +20,13 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css" />
-    <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css" />
+        <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap4.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.foundation.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css" />
     <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.3/css/responsive.semanticui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    @*<link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">*@
+    <link href="~/Content/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
@@ -49,11 +49,13 @@
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
+        <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap4.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.foundation.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.jqueryui.min.js"></script>
     <script src="//cdn.datatables.net/responsive/2.2.3/js/responsive.semanticui.min.js"></script>
+
+   
 </head>
 <body>
     <div class="main-wrapper dashboard-wrapper reports-wrapper">
@@ -67,12 +69,14 @@
 
                         @*<div class="middle-top-header d-md-flex">*@
                         <header>
-                            <h5>Mays PunchOut Catalog</h5>
-                          
+                            @*<h5>Mays PunchOut Catalog</h5>*@
+                            <img src="~/Content/img/ChemicoLLC_Logo.png"> 
                         </header>
                         <div style="border-bottom:1px solid lightgrey" class="login-cart">
-                            <div>
-                                Welcome HoneyWell User. Your Site is @Session["Sitedesc"]
+                            <div id="subheader">
+                                <h2>
+                                    Welcome HoneyWell User. Your Site is @Session["Sitedesc"]
+                                </h2>
                             </div>
                             <div>
                                 <div class="login-cart">
@@ -80,7 +84,7 @@
 
                                     </div>
                                     <div style="display:flex;">
-                                        <div class="my-account-wrap clearfix" style="float:right;">
+                                        <div class="my-account-wrap clearfix" style="float:right; display:none;">
                                             <div class="my-account float-right mr-3 mt-3">
                                                 <span>My Account</span>
                                                 <a class="menu-toggle" href='#'><span><img src="~/Content/img/user.svg"></span></a>
@@ -95,12 +99,12 @@
 
                                         </div>
                                         <div class="cart">
-                                            <a href='@Url.Action("MyShoppingCart", "Home", new {method="noadd"})'><i class="fa fa-shopping-cart cart-color" style="font-size:24px"></i></a> 
-                                            <div class="cartContent" style="float: right;">
-                                                 Cart (@Session["numrows"] Items)
-                                            </div>
+                                            <a href='@Url.Action("MyShoppingCart", "Home", new {method="noadd"})'><i class="fa fa-shopping-cart cart-color" style="font-size:24px"></i></a>
+                                            <p> Cart (@Session["numrows"] Items)</p>
                                         </div>
-                                       
+                                        @*<div class="cartContent" style="float: right;">*@
+                                          
+                                        @*</div>*@
                                     </div>
                                     
                                 </div>
@@ -132,7 +136,7 @@
                                 @RenderBody()
                                 <hr />
                                 <footer>
-                                    <p>Copyright © 2020 ChemicoMays, LLC</p>
+                                    <p>Copyright © 2020 Chemico LLC.PunchOut Catalog</p>
                                 </footer>
                             </div>
                     </div>

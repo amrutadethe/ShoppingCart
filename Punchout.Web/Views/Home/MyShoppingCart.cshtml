@@ -16,8 +16,8 @@
                 <label id="notifyLabel" class="NormalBold" style="font-size: 13px;font-weight:bold;">To update your cart, simply enter in the new quantity and click on the 'Update Your Shopping Cart' button.</label>
             </div>
             <div id="ShoppingCartTitle" runat="server" class="ContentHead">@ViewBag.ShoppingCartTitle</div>
-            <table cellpadding="2" cellspacing="2" border="1" class="CartListItem" width="100%" id="MyList">
-                <tr>
+            <table @*cellpadding="2" cellspacing="2" border="1" class="CartListItem "*@ class="table tftable middle-bottom-content-inner" width="100%" id="MyList">
+                <tr style="background: -webkit-linear-gradient(top, #4184c3 0%,#254562 100%);font-weight: bold;color: white;">
 
                     <th>Item Code</th>
                     <th>Item Desc.</th>
@@ -29,24 +29,24 @@
                 </tr>
                 @foreach (var item in Model)
                 {
-            <tr>
+                    <tr style="background-color: white;color: #333333;align-content:center;">
 
-                <td id="lblItemCode">@item.ItemCode</td>
-                <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
-                <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
-                <td id="lblUnitCost">@item.UnitCost</td>
-                @*<td>@item.Quantity</td>*@
-                <td id="txtQuantity">
-                    @Html.TextBoxFor(Model => item.Quantity)
-                </td>
+                        <td id="lblItemCode">@item.ItemCode</td>
+                        <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
+                        <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
+                        <td id="lblUnitCost">@item.UnitCost</td>
+                        @*<td>@item.Quantity</td>*@
+                        <td id="txtQuantity">
+                            @Html.TextBoxFor(Model => item.Quantity)
+                        </td>
 
 
-                <td id="lblitemtotal">
-                    @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
+                        <td id="lblitemtotal">
+                            @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
             Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER)))
-                </td>
-                <td id="chkremove"><input type="checkbox" /></td>
-            </tr>
+                        </td>
+                        <td id="chkremove"><input type="checkbox" /></td>
+                    </tr>
                 }
                 @*<tr>
                         <td align="right" colspan="6">Sum</td>
@@ -78,23 +78,41 @@
                 <input type="submit" style="position:absolute;left:-100px;top:-100px;width:0px;height:0px;"
                        onclick="javascript:return false;" />
                 @*<asp:imagebutton ID="Image1" runat="server"
-        ImageUrl="Styles/Images/yellowarrow.gif"
-        TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
+                    ImageUrl="Styles/Images/yellowarrow.gif"
+                    TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
                 <a href='@Url.Action("ProductList", "Home", new { searchText = "",itemText="" ,site_code=Session["Site_Code"],site_desc=Session["Sitedesc"]})'>
                     <img id="Image1" src="~/Content/img/yellowarrow.gif"
                          alt="ReturnToCatalog" style="border-width: 0" />
                 </a>
 
             </div>
-            <div align="center">
-               
-                <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart"   onclick="addMyList()" />
-               
-                &nbsp;&nbsp;
-                <a href="Home/CheckOut">
+            <div align="center" id="btndiv">
+                @if (ViewBag.ShoppingCartTitle == "Shopping Cart is Empty")
+                {
+
+                    <img id="UpdateBtn" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" />
+
                     <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
-                </a>
+                    
+                }
+                else
+                {
+                    <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
+                    <a href='@Url.Action("CheckOut","Home")'>
+                        <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
+                    </a>
+
+                }
             </div>
+            @*<div align="center" id="btndiv">
+
+                    <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
+
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("CheckOut","Home")'>
+                        <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
+                    </a>
+                </div>*@
         </div>
     </div>
 </div>
@@ -131,3 +149,14 @@
         });
     }
 </script>
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            if ($(@ViewBag.ShoppingCartTitle=="Shopping Cart is Empty") {
+                $('#UpdateBtn').prop('disabled', false);
+                alert("hii")
+            } else {
+
+                $('#UpdateBtn').prop('disabled', true);
+            }
+        });
+    </script>*@
