@@ -73,7 +73,7 @@
                                 </td>
                             </tr>
                         }
-                    </table> fvg
+                    </table>
 
                     Page@(Model.productList.PageCount < Model.productList.PageNumber ? 0 : Model.productList.PageNumber) of @Model.productList.PageCount
                     @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))
