@@ -1,6 +1,7 @@
 ﻿using Punchout.Entities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,21 +12,28 @@ namespace Punchout.DAL
 {
     public class DALProduct
     {
-        MAS_CMLEntities objMASCMLEntities = new MAS_CMLEntities();
+         string cmis_portal = ConfigurationSettings.AppSettings["cmis_portal"].ToString();
+         string MAS_CML = ConfigurationSettings.AppSettings["MAS_CML"].ToString();
 
+        MAS_CMLEntities objMASCMLEntities = new MAS_CMLEntities();
+        /// <summary>
+        /// Get All Product List for selected site or Entered Itemcode or Item desc
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="ItemText"></param>
+        /// <param name="siteId"></param>
+        /// <param name="sitedesc"></param>
+        /// <returns></returns>
         public List<CI_Item> GetProductList(string searchText, string ItemText, string siteId, string sitedesc)
         {
-            //List<CI_Item> CI_Item = objMASCMLEntities.CI_Item.ToList();
-            //return CI_Item;
+            
             try
             {
                 DataTable dt = new DataTable();
-                //SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0 and ItemCodeDesc LIKE @searchText and ItemCode Like @itemText and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site ", con);
-                //cmd.Parameters.AddWithValue("@searchText",searchText);
-                //cmd.Parameters.AddWithValue("@itemText",ItemText);
-                //cmd.Parameters.AddWithValue("@Site", site);
+                
+                SqlConnection con = new SqlConnection(MAS_CML);
+                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0 and ItemCodeDesc LIKE @searchText and ItemCode Like @itemText and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site order by ItemCodeDesc ", con);
+      
                 cmd.Parameters.AddWithValue("@searchText", string.Format("%{0}%", searchText));
                 cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", ItemText));
                 cmd.Parameters.AddWithValue("@Site", string.Format("%{0}%", siteId));
@@ -54,13 +62,17 @@ namespace Punchout.DAL
                 throw;
             }
         }
-
+        /// <summary>
+        /// Get My Shopping cart List.show Cart added Item details 
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <returns></returns>
         public List<ViewCart> GetMyShoopingCartList(string cartId)
         {
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#");
+                SqlConnection con = new SqlConnection(cmis_portal);
                 SqlCommand cmd = new SqlCommand("select * from ViewCart where  CartID = '" + cartId + "' ", con);
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -99,13 +111,17 @@ namespace Punchout.DAL
                 throw;
             }
         }
-
+        /// <summary>
+        /// Get Total Cart Quantity
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <returns></returns>
         public DataTable GetQuantity(string cartId)
         {
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
+                SqlConnection con = new SqlConnection(MAS_CML);
                 SqlCommand cmd = new SqlCommand("SELECT isnull(SUM(Quantity),0) FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + cartId + "'", con);
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -118,20 +134,22 @@ namespace Punchout.DAL
                 throw;
             }
         }
-
+        /// <summary>
+        /// Get Product List For Selected site
+        /// </summary>
+        /// <param name="itemText"></param>
+        /// <param name="site_code"></param>
+        /// <param name="site_desc"></param>
+        /// <returns></returns>
         public List<CI_Item> GetProductListByItemCode(string itemText, string site_code, string site_desc)
         {
             try
             {
                 DataTable dt = new DataTable();
-                //SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
-                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0  and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site ", con);
-                //cmd.Parameters.AddWithValue("@searchText",searchText);
-                //cmd.Parameters.AddWithValue("@itemText",ItemText);
-                //cmd.Parameters.AddWithValue("@Site", site);
-                //cmd.Parameters.AddWithValue("@searchText", string.Format("%{0}%", searchText));
-                //cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", itemText));
+                
+                SqlConnection con = new SqlConnection(MAS_CML);
+                SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0  and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site order by ItemCodeDesc", con);
+
                 cmd.Parameters.AddWithValue("@Site", string.Format("%{0}%", site_code));
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -158,13 +176,17 @@ namespace Punchout.DAL
                 throw;
             }
         }
-
+        /// <summary>
+        /// Get Product Details for  selected Item Code
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public CI_Item GetProductDetails(string id)
         {
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=MAS_CML;User ID=sa;Password=pass123!@#");
+                SqlConnection con = new SqlConnection(MAS_CML);
                 SqlCommand cmd = new SqlCommand("SELECT i.ExtendedDescriptionText,c.ItemCode,c.ItemCodeDesc,c.Category1,c.Category2,c.UDF_MANUFACT,c.StandardUnitPrice  FROM [MAS_CML].[dbo].[CI_ExtendedDescription] i, [MAS_CML].[dbo].[CI_Item] c WHERE i.ExtendedDescriptionKey = c.ExtendedDescriptionKey AND ItemCode Like @itemText", con);
                 cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", id));
                 con.Open();
