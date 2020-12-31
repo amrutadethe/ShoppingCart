@@ -20,7 +20,7 @@
                         @Html.DisplayFor(Model => ItemDesc)
                     }
                 </div>
-                <table border="0" >
+                <table border="0" style="margin-top:23px;">
                     <tr>
                         <td style="vertical-align:top;">
 
@@ -30,17 +30,37 @@
                             @Html.Image("categoryImage", image, "Product Image")
                         </td>
                         <td style="vertical-align: top">
-                            @{
-                                var description = Model.ItemCodeDesc + "--" + Model.Category2;
-                                @Html.DisplayFor(Model => description)
-                            }
-                            @{
-                                var manufacture = "Manufacturer:" + Model.UDF_MANUFACT;
-                                @Html.DisplayFor(Model => manufacture)
-                            }
-                            <br /><br /><br /><br />
+                            <table>
+                                <tr>
+                                    <td>
+                                        @{
+                                            var description = Model.ItemCodeDesc + "--" + Model.Category2;
+                                            @Html.DisplayFor(Model => description)
+                                        }
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @{
+                                            var manufacture = "Manufacturer:" + Model.UDF_MANUFACT;
+                                            @Html.DisplayFor(Model => manufacture)
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                             @{ 
+                                 var StandardLeadTime = Session["StandardTime"];
+                                 @Html.DisplayFor(Model=>StandardLeadTime)
+                             }
+                                    </td>
+                                </tr>
+                            </table>
+                            
                         </td>
                     </tr>
+                    
                 </table>
 
                 @*</div>

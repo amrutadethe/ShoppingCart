@@ -5,18 +5,24 @@
     Layout = "~/Views/Shared/_LayoutInner.cshtml";
 }
 
+<html>
+<head>
+    <title>Checkout Complete</title>
+</head>
+<body onload="document.form1.submit()">
 
-<div id="content">
-    <div id="centerColumn">
-        <header>
-            <h2>
-                Checkout Complete
-            </h2>
+    <form method="post" action=@Session["HOOK_URL"]  name="form1" id="form1">
+        <div id="content">
+            <div id="centerColumn">
 
-        </header>
-        @*<div >
-            <h1><a href="#">ChemicoMays PunchOut Portal</a></h1>
-            <h2>World Leading Chemical Management Service Provider</h2>
-        </div>*@
-    </div>
-</div>
+                <div>
+                    <h1><a href="#">ChemicoMays PunchOut Portal</a></h1>
+                    <h2>World Leading Chemical Management Service Provider</h2>
+                </div>
+            </div>
+        </div>
+        </form>
+</body>
+
+
+</html>

@@ -21,7 +21,7 @@
                       
                         @Html.DropDownListFor(m => m.site_code, new SelectList(Model.siteinfo, "site_code", "site_desc"), "--Select Site--", htmlAttributes: new { @class = "form-control radius", id = "ddlSite" })
                         @Html.Hidden("site_desc", null, new { @id = "hfsite_desc" })
-
+                    <label id="nosite" class="ErrorText">Please select a site.</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -59,7 +59,7 @@
             </div>
           
             <div>
-                <div class="form-group btn-align">
+                <div class="form-group btn-align" id="dvPassport">
                     <label for="cancel_shopping" class="label-name text-nowrap">Cancel Shopping:</label>
                     @*<a class="btn btn-cancel">Cancel</a>*@
                     <input type="button" value="Cancel" id="buttonID" onclick="myFunction()" class=" btn btn-cancel js-click" />
@@ -78,9 +78,13 @@
                 if ($("#ddlSite").find("option:selected").val() == '') {
                     $("#dvPassport").hide();
                     $('#ddlSite').prop('disabled', false);
+                    $('#nosite').show();
+                    $(':input[type="submit"]').prop('disabled', true);
                 } else {
                     $("#dvPassport").show();
                     $('#ddlSite').prop('disabled', true);
+                    $('#nosite').hide();
+                    $(':input[type="submit"]').prop('disabled', false);
                 }
             });
             $("#ddlSite").change(function () {

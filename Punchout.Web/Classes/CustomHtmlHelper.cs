@@ -8,6 +8,14 @@ namespace Punchout.Web
 {
     public static class CustomHtmlHelper
     {
+        /// <summary>
+        /// Html Image Helper
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="id"></param>
+        /// <param name="src"></param>
+        /// <param name="alt"></param>
+        /// <returns></returns>
         public static MvcHtmlString Image(this HtmlHelper helper, string id, string src,string alt)
         {
             // Below line is used for generate new tag with img  

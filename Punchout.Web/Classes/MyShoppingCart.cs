@@ -11,7 +11,12 @@ namespace Punchout.Web.Classes
     {
         public const string CartId = "PunchOut_CartID";
 
-
+        /// <summary>
+        /// Add Item to MyShopping Cart 
+        /// </summary>
+        /// <param name="cartID"></param>
+        /// <param name="productID"></param>
+        /// <param name="quantity"></param>
         public void AddItem(string cartID, string productID, int quantity)
         {
             using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())
@@ -47,7 +52,11 @@ namespace Punchout.Web.Classes
                 }
             }
         }
-
+        /// <summary>
+        /// Get Cart Added Total Item quantity
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <returns></returns>
         internal decimal GetTotal(string cartId)
         {
             using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())
@@ -70,6 +79,13 @@ namespace Punchout.Web.Classes
                 return (cartTotal);
             }
         }
+        /// <summary>
+        /// Update My Shopping Cart quantity and Remove Item
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="ItemCode"></param>
+        /// <param name="Quantity"></param>
+        /// <param name="Remove"></param>
         public void UpdateShoppingCartDatabase(string cartId, string ItemCode, string Quantity, bool Remove)
         {
             if (Convert.ToInt32(Quantity) < 1 || Remove == true)
@@ -82,6 +98,11 @@ namespace Punchout.Web.Classes
                 UpdateItem(cartId, ItemCode, Convert.ToInt32(Quantity));
             }
         }
+        /// <summary>
+        /// Remove Item in shopping Cart
+        /// </summary>
+        /// <param name="cartID"></param>
+        /// <param name="productID"></param>
         public void RemoveItem(string cartID, string productID)
         {
             using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())
@@ -106,6 +127,12 @@ namespace Punchout.Web.Classes
                 }
             }
         }
+        /// <summary>
+        /// Update Item qunatity in shopping Cart
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <param name="ItemCode"></param>
+        /// <param name="Quantity"></param>
         public void UpdateItem(string cartId, string ItemCode, int Quantity)
         {
             using (cmis_portal_uatEntities1 db = new cmis_portal_uatEntities1())

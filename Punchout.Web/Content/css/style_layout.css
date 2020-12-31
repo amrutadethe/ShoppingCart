@@ -96,7 +96,12 @@
     padding-left: 5px;
     text-align: left;
 }
-
+.ErrorText {
+    color: red;
+    font-family: Verdana, Arial;
+    font-size: 12px;
+    line-height: 20pt
+}
 #subheader h2 {
     color: black;
     font-family: Verdana, Helvetica, sans-serif;

@@ -189,6 +189,7 @@
     <Content Include="Content\img\chemicoMaysLogoBlue.gif" />
     <Content Include="Content\img\Chemico_Logo – 2.png" />
     <Content Include="Content\img\Chemico_Logo – 3.png" />
+    <Content Include="Content\img\Chemico_Logo – 5.png" />
     <Content Include="Content\img\down-arrow %281%29.png" />
     <Content Include="Content\img\down-arrow.png" />
     <Content Include="Content\img\fevicon.png" />
@@ -265,6 +266,7 @@
     <Content Include="Views\Shared\_LeftNavigation.cshtml" />
     <Content Include="Views\Home\PartialLayout_old.cshtml" />
     <Content Include="Views\Home\CheckOut.cshtml" />
+    <Content Include="Views\Home\NoUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

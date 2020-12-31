@@ -16,53 +16,76 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using PagedList;
+using System.Configuration;
+
 namespace Punchout.Web.Controllers
 {
     public class HomeController : Controller
     {
+        string cmis_portal = ConfigurationManager.ConnectionStrings["cmis_portal"].ConnectionString;
+        string MAS_CML = ConfigurationManager.ConnectionStrings["MAS_CML"].ConnectionString;
         DALProduct objDALproductList = new DALProduct();
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
 
         // public const string CartId = "PunchOut_CartID";
+        /// <summary>
+        /// Bind Site Dropdown data and Show Home page
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
+        
         {
-            hw_sites objhwsite = new hw_sites();
-            DataSet ds = new DataSet();
-
-            //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
-            using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
+            if (Request.QueryString["HOOK_URL"] == null && Session["HOOK_URL"] == null)
             {
-                using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
-
-                {
-                    con.Open();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(ds);
-                    List<hw_sites> sitelist = new List<hw_sites>();
-                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    {
-                        hw_sites hwsite_obj = new hw_sites();
-                        hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
-                        hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
-
-                        sitelist.Add(hwsite_obj);
-                    }
-                    objhwsite.siteinfo = sitelist;
-                }
-                con.Close();
+                return View("NoUser");
             }
+            else
+            {
+                if (Session["HOOK_URL"] == null)
+                {
+                    Session["HOOK_URL"] = Request.QueryString["HOOK_URL"];
+                }
+                hw_sites objhwsite = new hw_sites();
+                DataSet ds = new DataSet();
 
-            return View(objhwsite);
+                //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
+                using (SqlConnection con = new SqlConnection(cmis_portal))
+                {
+                    using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
+
+                    {
+                        con.Open();
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(ds);
+                        List<hw_sites> sitelist = new List<hw_sites>();
+                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        {
+                            hw_sites hwsite_obj = new hw_sites();
+                            hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
+                            hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
+
+                            sitelist.Add(hwsite_obj);
+                        }
+                        objhwsite.siteinfo = sitelist;
+                    }
+                    con.Close();
+                }
+
+                return View("Index",objhwsite);
+            }
         }
-
+        /// <summary>
+        /// Bind Search panel Data and return  partialview
+        /// </summary>
+        /// <returns></returns>
         public ActionResult PartialLayout()
         {
             hw_sites objhwsite = new hw_sites();
             DataSet ds = new DataSet();
 
             //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
-            using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
+            using (SqlConnection con = new SqlConnection(cmis_portal))
             {
                 using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
                 {
@@ -120,7 +143,7 @@ namespace Punchout.Web.Controllers
         //}
 
         /// <summary>
-        /// Show all products for selected site
+        /// Show all products for selected site or Entered Itemcode or Item desc
         /// </summary>
         /// <param name="searchText"></param>
         /// <param name="itemText"></param>
@@ -144,6 +167,7 @@ namespace Punchout.Web.Controllers
             {
                 getList = objBALProductList.GetProductListByItemCode(itemText, site_code, site_desc);
             }
+            else
             
                 getList = objBALProductList.GetProductList(searchText, itemText, Convert.ToString(Session["Site_Code"]), site_desc);
          
@@ -152,27 +176,33 @@ namespace Punchout.Web.Controllers
                 // For each row which is bound, we need to also look up its lead time
                 string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
                 //using (SqlConnection conLead = new SqlConnection("Data Source=massql\\massql;Initial Catalog=MAS_SYSTEM;Persist Security Info=True; User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
-                using (SqlConnection conLead = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=MAS_CML;Persist Security Info=True; User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+                using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
                     conLead.Open();
 
                     SqlDataReader reader = com.ExecuteReader();
-
-                    while (reader.Read())
+                    if (reader.HasRows==true)
                     {
-                        if (reader[0] != System.DBNull.Value)
+                        while (reader.Read())
                         {
-                            int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                            //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
-                            // e.Row.Cells[4].Text = Convert.ToString(newDays);
-                            item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                            if (reader[0] != System.DBNull.Value)
+                            {
+                                int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
+                                //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
+                                // e.Row.Cells[4].Text = Convert.ToString(newDays);
+                                item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                            }
+                            else
+                            {
+                                //e.Row.Cells[4].Text = "0";
+                                item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                            }
                         }
-                        else
-                        {
-                            //e.Row.Cells[4].Text = "0";
-                            item.UDF_HNW_CLASSIFICATION_CODE = "0";    
-                        }
+                    }
+                    else
+                    {
+                        item.UDF_HNW_CLASSIFICATION_CODE = " ";
                     }
                     reader.Close();
                     conLead.Close();
@@ -185,6 +215,11 @@ namespace Punchout.Web.Controllers
             model.productList = PageList;
             return View(model);
         }
+       /// <summary>
+       /// Return Days to calculate for the standard lead time
+       /// </summary>
+       /// <param name="days"></param>
+       /// <returns></returns>
         protected static int AddExtraDays(int days)
         {
             int newDays = days;
@@ -312,6 +347,13 @@ namespace Punchout.Web.Controllers
 
             return newDays;
         }
+        /// <summary>
+        /// Show all products for selected site
+        /// </summary>
+        /// <param name="site_code"></param>
+        /// <param name="site_desc"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public ActionResult ProductListBySite( string site_code, string site_desc, int? page)
         {
             int PageIndex = 1;
@@ -331,27 +373,33 @@ namespace Punchout.Web.Controllers
                 // For each row which is bound, we need to also look up its lead time
                 string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
                 //using (SqlConnection conLead = new SqlConnection("Data Source=massql\\massql;Initial Catalog=MAS_SYSTEM;Persist Security Info=True; User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
-                using (SqlConnection conLead = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=MAS_CML;Persist Security Info=True; User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+                using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
                     conLead.Open();
 
                     SqlDataReader reader = com.ExecuteReader();
-
-                    while (reader.Read())
+                    if (reader.HasRows == true)
                     {
-                        if (reader[0] != System.DBNull.Value)
+                        while (reader.Read())
                         {
-                            int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                            //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
-                            // e.Row.Cells[4].Text = Convert.ToString(newDays);
-                            item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                            if (reader[0] != System.DBNull.Value)
+                            {
+                                int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
+                                //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
+                                // e.Row.Cells[4].Text = Convert.ToString(newDays);
+                                item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                            }
+                            else
+                            {
+                                //e.Row.Cells[4].Text = "0";
+                                item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                            }
                         }
-                        else
-                        {
-                            //e.Row.Cells[4].Text = "0";
-                            item.UDF_HNW_CLASSIFICATION_CODE = "0";
-                        }
+                    }
+                    else
+                    {
+                        item.UDF_HNW_CLASSIFICATION_CODE = " ";
                     }
                     reader.Close();
                     conLead.Close();
@@ -364,10 +412,47 @@ namespace Punchout.Web.Controllers
             model.productList = PageList;
             return View("ProductList", model);
         }
-
+        /// <summary>
+        /// Show ProductDetails to selected Item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult ProductDetails(string id)
         {
+            
             var getProductDetails = objBALProductList.GetProductDetails(id);
+                // For each row which is bound, we need to also look up its lead time
+                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';"; 
+                using (SqlConnection conLead = new SqlConnection(MAS_CML))
+                {
+                    SqlCommand com = new SqlCommand(selStr, conLead);
+                    conLead.Open();
+
+                    SqlDataReader reader = com.ExecuteReader();
+                if (reader.HasRows == true)
+                {
+                    while (reader.Read())
+                    {
+                        if (reader[0] != System.DBNull.Value)
+                        {
+                            int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
+
+                            Session["StandardTime"] = "Standard Lead Time: " + Convert.ToString(newDays) + " days";
+                        }
+                        else
+                        {
+                            Session["StandardTime"] = "Standard Lead Time: Not Available";
+                        }
+                    }
+                }
+                else
+                {
+                    Session["StandardTime"] = "Standard Lead Time: Not Available";
+                }
+                    reader.Close();
+                    conLead.Close();
+                }
+
             return View("ProductDetails", getProductDetails);
         }
 
@@ -384,12 +469,18 @@ namespace Punchout.Web.Controllers
 
             return View();
         }
-
+        /// <summary>
+        /// New Item Addition
+        /// </summary>
+        /// <returns></returns>
         public ActionResult HSEApproval()
         {
             return View();
         }
-
+        /// <summary>
+        /// Get Cart Id
+        /// </summary>
+        /// <returns></returns>
         public string GetShoppingCartId()
         {
 
@@ -401,7 +492,11 @@ namespace Punchout.Web.Controllers
             }
             return Session["CartId"].ToString();
         }
-
+        /// <summary>
+        /// Added Products To Cart
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult AddToCart(string id)
         {
             string productId;
@@ -420,6 +515,10 @@ namespace Punchout.Web.Controllers
             }
             return RedirectToAction("MyShoppingCart");
         }
+        /// <summary>
+        /// showing Cart Product List
+        /// </summary>
+        /// <returns></returns>
         public ActionResult MyShoppingCart()
         {
             MyShoppingCart usersShoppingCart = new MyShoppingCart();
@@ -459,6 +558,11 @@ namespace Punchout.Web.Controllers
             var getCartitem = objBALProductList.GetMyShoopingCartList(Convert.ToString(Session["CartId"]));
             return View("MyShoppingCart", getCartitem);
         }
+        /// <summary>
+        /// Update Cart Quantity and Remove Item
+        /// </summary>
+        /// <param name="str2"></param>
+        /// <returns></returns>
         public ActionResult UpdateShoppingCart(string str2)
         {
             MyShoppingCart usersShoppingCart = new MyShoppingCart();
@@ -482,6 +586,10 @@ namespace Punchout.Web.Controllers
             }
             return Json(new { success = true, Message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// Cancel current shopping visit.This will remove all items in your shopping cart and reset your site.
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CancelSite()
         {
             // Need to clear out the session var
@@ -492,7 +600,7 @@ namespace Punchout.Web.Controllers
             string deleteString = "DELETE FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
             int numRows1 = 0;
             //using (SqlConnection condel = new SqlConnection("Data Source=massql\\massql;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
-            using (SqlConnection condel = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+            using (SqlConnection condel = new SqlConnection(cmis_portal))
             {
                 SqlCommand com3 = new SqlCommand(deleteString, condel);
                 try
@@ -525,7 +633,10 @@ namespace Punchout.Web.Controllers
 
         //    return View(viewModel);
         //}
-
+        /// <summary>
+        /// Place Order.Submit and return to EBP
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CheckOut()
         {
             string queryString = "SELECT * FROM [cmis_portal_uat].[dbo].[ViewCart] WHERE CartID = '" + Session["PunchOut_CartID"] + "';";
@@ -546,7 +657,7 @@ namespace Punchout.Web.Controllers
             string orderNo = "";
             int iorderNo = 0;
             //using (SqlConnection sqlcon = new SqlConnection("Data Source=massql\\massql;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
-            using (SqlConnection sqlcon = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+            using (SqlConnection sqlcon = new SqlConnection(cmis_portal))
             {
                 SqlCommand orcom = new SqlCommand(queryString3, sqlcon);
                 sqlcon.Open();
@@ -565,7 +676,7 @@ namespace Punchout.Web.Controllers
                 }
             }
 
-            using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+            using (SqlConnection con = new SqlConnection(cmis_portal))
             {
                 SqlCommand com = new SqlCommand(queryString, con);
                 con.Open();
@@ -758,7 +869,7 @@ namespace Punchout.Web.Controllers
             string orderString = "INSERT INTO [cmis_portal_uat].[dbo].[PunchOrders] VALUES(getdate(), '" + Session["UserName"] + "');";
             int numRows1 = 0;
             int numRows2 = 0;
-            using (SqlConnection condel = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=sa;Password=pass123!@#;MultipleActiveResultSets=True"))
+            using (SqlConnection condel = new SqlConnection(cmis_portal))
             {
                 SqlCommand com3 = new SqlCommand(deleteString, condel);
                 SqlCommand com4 = new SqlCommand(orderString, condel);
