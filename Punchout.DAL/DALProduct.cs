@@ -12,10 +12,10 @@ namespace Punchout.DAL
 {
     public class DALProduct
     {
-         string cmis_portal = ConfigurationSettings.AppSettings["cmis_portal"].ToString();
-         string MAS_CML = ConfigurationSettings.AppSettings["MAS_CML"].ToString();
-
-        MAS_CMLEntities objMASCMLEntities = new MAS_CMLEntities();
+        #region
+        string cmis_portal = ConfigurationSettings.AppSettings["cmis_portal"].ToString();
+        string MAS_CML = ConfigurationSettings.AppSettings["MAS_CML"].ToString();
+        #endregion
         /// <summary>
         /// Get All Product List for selected site or Entered Itemcode or Item desc
         /// </summary>
@@ -26,14 +26,11 @@ namespace Punchout.DAL
         /// <returns></returns>
         public List<CI_Item> GetProductList(string searchText, string ItemText, string siteId, string sitedesc)
         {
-            
+            SqlConnection con = new SqlConnection(MAS_CML);
             try
             {
                 DataTable dt = new DataTable();
-                
-                SqlConnection con = new SqlConnection(MAS_CML);
                 SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0 and ItemCodeDesc LIKE @searchText and ItemCode Like @itemText and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site order by ItemCodeDesc ", con);
-      
                 cmd.Parameters.AddWithValue("@searchText", string.Format("%{0}%", searchText));
                 cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", ItemText));
                 cmd.Parameters.AddWithValue("@Site", string.Format("%{0}%", siteId));
@@ -58,10 +55,14 @@ namespace Punchout.DAL
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
             }
         }
+
         /// <summary>
         /// Get My Shopping cart List.show Cart added Item details 
         /// </summary>
@@ -69,10 +70,10 @@ namespace Punchout.DAL
         /// <returns></returns>
         public List<ViewCart> GetMyShoopingCartList(string cartId)
         {
+            SqlConnection con = new SqlConnection(cmis_portal);
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection(cmis_portal);
                 SqlCommand cmd = new SqlCommand("select * from ViewCart where  CartID = '" + cartId + "' ", con);
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -80,7 +81,6 @@ namespace Punchout.DAL
                 var allProductList = new List<ViewCart>();
                 if (dt.Rows.Count > 0)
                 {
-                    
                     allProductList = dt.AsEnumerable().Select(rows => new ViewCart
                     {
                         ItemCode = Convert.ToString(rows["ItemCode"]),
@@ -89,13 +89,11 @@ namespace Punchout.DAL
                         UnitCost = Convert.ToDecimal(rows["UnitCost"]),
                         Quantity = Convert.ToInt32(rows["Quantity"]),
                         SalesUnitOfMeasure = Convert.ToString(rows["SalesUnitOfMeasure"]),
-
-                     //   StandardLeadTime = Convert.ToDecimal(rows["StandardLeadTime"],
-                      StandardLeadTime=  decimal.Parse((rows["StandardLeadTime"] == null || rows["StandardLeadTime"].ToString() == String.Empty) ? "0" : rows["StandardLeadTime"].ToString()),
-                    CartID = Convert.ToString(rows["CartID"]),
+                        StandardLeadTime = decimal.Parse((rows["StandardLeadTime"] == null || rows["StandardLeadTime"].ToString() == String.Empty) ? "0" : rows["StandardLeadTime"].ToString()),
+                        CartID = Convert.ToString(rows["CartID"]),
                         Category1 = Convert.ToString(rows["Category1"]),
                         Category2 = Convert.ToString(rows["Category2"]),
-                        UDF_ENVIRONMENTAL=decimal.Parse((rows["UDF_ENVIRONMENTAL"]==null || rows["UDF_ENVIRONMENTAL"].ToString()==string.Empty)?"0" : rows["UDF_ENVIRONMENTAL"].ToString()),
+                        UDF_ENVIRONMENTAL = decimal.Parse((rows["UDF_ENVIRONMENTAL"] == null || rows["UDF_ENVIRONMENTAL"].ToString() == string.Empty) ? "0" : rows["UDF_ENVIRONMENTAL"].ToString()),
                         UDF_FREIGHT = decimal.Parse((rows["UDF_FREIGHT"] == null || rows["UDF_FREIGHT"].ToString() == string.Empty) ? "0" : rows["UDF_FREIGHT"].ToString()),
                         UDF_FUEL = decimal.Parse((rows["UDF_FUEL"] == null || rows["UDF_FUEL"].ToString() == string.Empty) ? "0" : rows["UDF_FUEL"].ToString()),
                         UDF_OTHER = decimal.Parse((rows["UDF_OTHER"] == null || rows["UDF_OTHER"].ToString() == string.Empty) ? "0" : rows["UDF_OTHER"].ToString()),
@@ -107,10 +105,14 @@ namespace Punchout.DAL
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
             }
         }
+
         /// <summary>
         /// Get Total Cart Quantity
         /// </summary>
@@ -118,11 +120,11 @@ namespace Punchout.DAL
         /// <returns></returns>
         public DataTable GetQuantity(string cartId)
         {
+            SqlConnection con = new SqlConnection(cmis_portal);
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection(MAS_CML);
-                SqlCommand cmd = new SqlCommand("SELECT isnull(SUM(Quantity),0) FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + cartId + "'", con);
+                SqlCommand cmd = new SqlCommand("SELECT isnull(SUM(Quantity),0) FROM [dbo].[ShoppingCart] WHERE CartID = '" + cartId + "'", con);
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
@@ -130,10 +132,14 @@ namespace Punchout.DAL
             }
             catch (Exception ex)
             {
-
-                throw;
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
             }
         }
+
         /// <summary>
         /// Get Product List For Selected site
         /// </summary>
@@ -143,13 +149,11 @@ namespace Punchout.DAL
         /// <returns></returns>
         public List<CI_Item> GetProductListByItemCode(string itemText, string site_code, string site_desc)
         {
+            SqlConnection con = new SqlConnection(MAS_CML);
             try
             {
                 DataTable dt = new DataTable();
-                
-                SqlConnection con = new SqlConnection(MAS_CML);
                 SqlCommand cmd = new SqlCommand("select ItemCode,ItemCodeDesc,SalesUnitOfMeasure,Category1,Category2,StandardUnitPrice,UDF_HNW_CLASSIFICATION_CODE from CI_Item where StandardUnitPrice>0  and SUBSTRING([ItemCode], 1, 2) = 'HW' and SUBSTRING([ItemCode], 4, 4) LIKE  @Site order by ItemCodeDesc", con);
-
                 cmd.Parameters.AddWithValue("@Site", string.Format("%{0}%", site_code));
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -173,9 +177,14 @@ namespace Punchout.DAL
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
             }
         }
+
         /// <summary>
         /// Get Product Details for  selected Item Code
         /// </summary>
@@ -183,11 +192,11 @@ namespace Punchout.DAL
         /// <returns></returns>
         public CI_Item GetProductDetails(string id)
         {
+            SqlConnection con = new SqlConnection(MAS_CML);
             try
             {
                 DataTable dt = new DataTable();
-                SqlConnection con = new SqlConnection(MAS_CML);
-                SqlCommand cmd = new SqlCommand("SELECT i.ExtendedDescriptionText,c.ItemCode,c.ItemCodeDesc,c.Category1,c.Category2,c.UDF_MANUFACT,c.StandardUnitPrice  FROM [MAS_CML].[dbo].[CI_ExtendedDescription] i, [MAS_CML].[dbo].[CI_Item] c WHERE i.ExtendedDescriptionKey = c.ExtendedDescriptionKey AND ItemCode Like @itemText", con);
+                SqlCommand cmd = new SqlCommand("SELECT i.ExtendedDescriptionText,c.ItemCode,c.ItemCodeDesc,c.Category1,c.Category2,c.UDF_MANUFACT,c.StandardUnitPrice  FROM [dbo].[CI_ExtendedDescription] i,[dbo].[CI_Item] c WHERE i.ExtendedDescriptionKey = c.ExtendedDescriptionKey AND ItemCode Like @itemText", con);
                 cmd.Parameters.AddWithValue("@itemText", string.Format("%{0}%", id));
                 con.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -208,7 +217,11 @@ namespace Punchout.DAL
             catch (Exception ex)
             {
 
-                throw;
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
             }
         }
     }
