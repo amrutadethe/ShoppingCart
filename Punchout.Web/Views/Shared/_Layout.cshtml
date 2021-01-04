@@ -8,7 +8,6 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @*<title>@ViewBag.Title - ChemicoMays PunchOut</title>*@
     <title>ChemicoMays PunchOut</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -45,16 +44,6 @@
                 @Html.ActionLink("New Item Additions", "HSEApproval", "Home")
                 <h2>
                     Welcome Honeywell user.  Your site @(Model.site_desc)
-                    @*@Model.site_desc*@
-
-                    @*<% if (Session["SiteDesc"] == null)
-
-                        Response.Write(" not selected.  Please select a site from the left.");
-                        }
-                        else
-                        {
-                        Response.Write(" set to " + Session["SiteDesc"] + ".");
-                        } %>&nbsp;&nbsp;*@
                 </h2>
             </div>
         </div>
@@ -70,7 +59,6 @@
                 @{
                     Html.RenderPartial("PartialLayout_old", Model);
                 }
-                @*@RenderPage("~/Views/Home/PartialLayoutList.cshtml")*@
             </div>
             <div class="clear"></div>
         </div>

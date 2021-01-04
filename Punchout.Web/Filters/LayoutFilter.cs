@@ -2,6 +2,7 @@
 using Punchout.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -12,20 +13,20 @@ namespace Punchout.Web.Filters
 {
     public class LayoutFilter : ActionFilterAttribute
     {
+        #region
         BALProduct objBALProductList = new BALProduct();
+        string cmis_portal = ConfigurationManager.ConnectionStrings["cmis_portal"].ConnectionString;
+        #endregion
+
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            //HttpContext.Current.Session["Sitedesc"] = "Site1";
             if(HttpContext.Current.Session["Sitedesc"] ==null)
             {
                 HttpContext.Current.Session["Sitedesc"] = "Please select a site";
             }
-
             hw_sites objhwsite = new hw_sites();
-
             DataSet ds = new DataSet();
-            //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
-            using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
+            using (SqlConnection con = new SqlConnection(cmis_portal))
             {
                 using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
                 {
@@ -46,10 +47,6 @@ namespace Punchout.Web.Filters
                     objhwsite.site_desc = Convert.ToString(HttpContext.Current.Session["Sitedesc"]);
                 }
                 con.Close();
-                //if (HttpContext.Current.Session["PunchOut_CartID"] == null)
-                //{
-                //    HttpContext.Current.Session["PunchOut_CartID"] = "PunchOut_CartID";
-                //}
                 int numRows = 0;
                DataTable dt = new DataTable();
                 dt = objBALProductList.GetQuantity(Convert.ToString(HttpContext.Current.Session["CartId"]));

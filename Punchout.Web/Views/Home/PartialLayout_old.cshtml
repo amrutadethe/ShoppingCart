@@ -4,8 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-    @*@Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
     @if (Model.siteinfo != null)
@@ -36,11 +34,8 @@
                 </div>
                 <br />
                 <div class="row">
-                    @*<input type="button"
-                        value="Go Somewhere Else"
-                        onclick="location.href='<%: Url.Action(" Action", "Controller" ) %>'" />*@
+
                     <button type="submit" id="search" @*onclick="GetData()"*@>Search</button>
-                    @*<input type="button" value="Search" onclick="location.href='<%:Url.Action(" ProductListByItemCode","Home")%>'"/>*@
                 </div>
                 <br />
                 <div class="row">
@@ -56,8 +51,6 @@
                     Cancel Shopping
                 </div>
                 <div class="row">
-                    @*@Html.ActionLink("Cancel", "CancelSite",
-                        "home", new { @class = "btn btn-default", @role = "button", @onclick = "return confirm('Are you sure you want to cancel your current shopping visit?  This will remove all items in your shopping cart and reset your site.!')" })*@
                     <input type="button" value="Cancel" id="buttonID" onclick="myFunction()" />
                 </div>
             </div>
@@ -81,53 +74,15 @@
 
 
         });
-
-            //$(function () {
-            //    $("#buttonID").click(function (event) {
-            //        event.preventDefault();
-            //        $('<div title="Confirm Box"></div>').dialog({
-            //            open: function (event, ui) {
-            //                $(this).html("Yes or No question?");
-            //            },
-            //            close: function () {
-            //                $(this).remove();
-            //            },
-            //            resizable: false,
-            //            height: 140,
-            //            modal: true,
-            //            buttons: {
-            //                'Yes': function () {
-            //                    $(this).dialog('close');
-            //                    $.post('url/theValueYouWantToPass');
-
-            //                },
-            //                'No': function () {
-            //                    $(this).dialog('close');
-            //                    $.post('url/theOtherValueYouWantToPAss');
-            //                }
-            //            }
-            //        });
-            //    });
-            //});
-
-
-
-
-
-
             function myFunction() {
                 var x;
                 if (confirm("Are you sure you want to cancel your current shopping visit?  This will remove all items in your shopping cart and reset your site.!") == true) {
                     window.location.href='@Url.Action("CancelSite", "Home")'
-                    //return true;
-                 @*@Html.ActionLink("CancelSite", "Home")*@
-
                 } else {
                     return false;
                 }
             }
         </script>
-        @*@Html.ActionLink("ClicktoConfirm", "Home", null, new { onclick = "return myFunction()" })*@
     }
 </body>
 </html>

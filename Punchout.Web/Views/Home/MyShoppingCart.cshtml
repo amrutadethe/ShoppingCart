@@ -16,7 +16,7 @@
                 <label id="notifyLabel" class="NormalBold" style="font-size: 13px;font-weight:bold;">To update your cart, simply enter in the new quantity and click on the 'Update Your Shopping Cart' button.</label>
             </div>
             <div id="ShoppingCartTitle" runat="server" class="ContentHead">@ViewBag.ShoppingCartTitle</div>
-            <table @*cellpadding="2" cellspacing="2" border="1" class="CartListItem "*@ class="table tftable middle-bottom-content-inner" width="100%" id="MyList">
+            <table  class="table tftable middle-bottom-content-inner" width="100%" id="MyList">
                 <tr style="background: -webkit-linear-gradient(top, #4184c3 0%,#254562 100%);font-weight: bold;color: white;">
 
                     <th>Item Code</th>
@@ -48,16 +48,6 @@
                         <td id="chkremove"><input type="checkbox" /></td>
                     </tr>
                 }
-                @*<tr>
-                        <td align="right" colspan="6">Sum</td>
-                        <td>
-                            @{
-                                List<Item> cart = (List<Item>)Session["cart"];
-                                var total = cart.Sum(item => item.Product.Price * item.Quantity);
-                            }
-                            @total
-                        </td>
-                    </tr>*@
             </table>
 
 
@@ -77,14 +67,10 @@
             <div align="left">
                 <input type="submit" style="position:absolute;left:-100px;top:-100px;width:0px;height:0px;"
                        onclick="javascript:return false;" />
-                @*<asp:imagebutton ID="Image1" runat="server"
-                    ImageUrl="Styles/Images/yellowarrow.gif"
-                    TabIndex="-1" onclick="Image1_Click"></asp:imagebutton>*@
                 <a href='@Url.Action("ProductList", "Home", new { searchText = "",itemText="" ,site_code=Session["Site_Code"],site_desc=Session["Sitedesc"]})'>
                     <img id="Image1" src="~/Content/img/yellowarrow.gif"
                          alt="ReturnToCatalog" style="border-width: 0" />
                 </a>
-
             </div>
             <div align="center" id="btndiv">
                 @if (ViewBag.ShoppingCartTitle == "Shopping Cart is Empty")
@@ -104,15 +90,6 @@
 
                 }
             </div>
-            @*<div align="center" id="btndiv">
-
-                    <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
-
-                    &nbsp;&nbsp;
-                    <a href='@Url.Action("CheckOut","Home")'>
-                        <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
-                    </a>
-                </div>*@
         </div>
     </div>
 </div>
@@ -127,11 +104,6 @@
                 Quantity: $("#MyList tr #txtQuantity input").eq(i).val(),
                 ItemCode: $("#MyList tr #lblItemCode").eq(i).text(),
                 Remove: $("#MyList tr #chkremove input[type='checkbox']").eq(i).is(':checked')
-                //ItemCodeDesc: $("#MyList tr #lblItemCodeDesc input").eq(i).val(),
-             //   SalesUnitOfMeasure: $("#MyList tr #lblSalesUnitOfMeasure input").eq(i).val(),
-               // UnitCost: $("#MyList tr #lblUnitCost input").eq(i).val(),
-             //   itemtotal: $("#MyList tr #lblitemtotal input").eq(i).val(),
-
             });
         }
 
@@ -149,14 +121,3 @@
         });
     }
 </script>
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            if ($(@ViewBag.ShoppingCartTitle=="Shopping Cart is Empty") {
-                $('#UpdateBtn').prop('disabled', false);
-                alert("hii")
-            } else {
-
-                $('#UpdateBtn').prop('disabled', true);
-            }
-        });
-    </script>*@

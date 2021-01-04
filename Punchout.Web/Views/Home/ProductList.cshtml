@@ -1,7 +1,5 @@
 ﻿@model Punchout.Web.Models.ProductListViewModel
 @using PagedList.Mvc
-@*@model PagedList.IPagedList<Punchout.Entities.CI_Item>*@
-@*@model Punchout.Web.Models.PagerModel*@
 @{
     ViewBag.Title = "ProductList";
   //  Layout = "~/Views/Shared/_Layout.cshtml";
@@ -19,7 +17,6 @@
             </p>
             <div class="table-responsive">
                 <div id="partialDiv" class="middle-bottom-content-inner">
-                    @*@Html.Partial("ProductList_partial", Model);*@
                     <table class="table tftable middle-bottom-content-inner">
                         <tr style="background: -webkit-linear-gradient(top, #4184c3 0%,#254562 100%);font-weight: bold;color: white;">
                             <th>
@@ -50,7 +47,6 @@
                                     @Html.DisplayFor(modelitem => item.ItemCode)
                                 </td>
                                 <td>
-                                    @*@html.DisplayFor(modelitem => item.itemcodedesc + "--" + item.category2 + " " + item.category1)*@
                                     @{
                                         var fullname = item.ItemCodeDesc + "--" + item.Category2 + " " + item.Category1;
                                         @Html.DisplayFor(modelitem => fullname)
@@ -76,40 +72,7 @@
                     </table>
 
                     Page@(Model.productList.PageCount < Model.productList.PageNumber ? 0 : Model.productList.PageNumber) of @Model.productList.PageCount
-                    @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))
-
-                    <!-- pager -->
-                    @*@if (Model.Pager.EndPage > 1)
-                        {
-                            <ul class="pagination">
-                                @if (Model.Pager.CurrentPage > 1)
-                                {
-                                    <li>
-                                        <a href="~/Home/Index">First</a>
-                                    </li>
-                                    <li>
-                                        <a href="~/Home/Index?page=@(Model.Pager.CurrentPage - 1)">Previous</a>
-                                    </li>
-                                }
-
-                                @for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
-                                {
-                                    <li class="@(page == Model.Pager.CurrentPage ? "active" : "")">
-                                        <a href="~/Home/Index?page=@page">@page</a>
-                                    </li>
-                                }
-
-                                @if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
-                                {
-                                    <li>
-                                        <a href="~/Home/Index?page=@(Model.Pager.CurrentPage + 1)">Next</a>
-                                    </li>
-                                    <li>
-                                        <a href="~/Home/Index?page=@(Model.Pager.TotalPages)">Last</a>
-                                    </li>
-                                }
-                            </ul>
-                        }*@
+                    @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))                  
                 </div>
 
             </div>

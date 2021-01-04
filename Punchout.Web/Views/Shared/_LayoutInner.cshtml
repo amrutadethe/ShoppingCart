@@ -66,10 +66,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="middle-wrapper">
-
-                        @*<div class="middle-top-header d-md-flex">*@
                         <header>
-                            @*<h5>Mays PunchOut Catalog</h5>*@
                             <img src="~/Content/img/ChemicoLLC_Logo.png"> 
                         </header>
                         <div style="border-bottom:1px solid lightgrey" class="login-cart">
@@ -91,8 +88,6 @@
                                                 <div class="menu-toggle-wrap">
                                                     <ul>
                                                         <li><a href="#" id="lnkLogout">Logout</a></li>
-                                                        @*<li><a href="#">Change Password</a></li>*@
-                                                        @*<li><a href="#">Lorem</a></li>*@
                                                     </ul>
                                                 </div>
                                             </div>
@@ -102,31 +97,11 @@
                                             <a href='@Url.Action("MyShoppingCart", "Home", new {method="noadd"})'><i class="fa fa-shopping-cart cart-color" style="font-size:24px"></i></a>
                                             <p> Cart (@Session["numrows"] Items)</p>
                                         </div>
-                                        @*<div class="cartContent" style="float: right;">*@
-                                          
-                                        @*</div>*@
                                     </div>
                                     
                                 </div>
                             </div>
                         </div>
-                            <!--<div class="logo mr-auto">
-                                <img src="~/Content/img/logo.png"> <span style=" color: #32689A; font-size: 25px; font-weight: bold;"> Mays PunchOut Catalog </span>
-                            </div>
-                            <div class="mr-auto d-sm-none d-xl-block" style="margin-right:400px !important;">
-                                <h3 class="sub-heading"> Welcome Honeywell user. Your site is @Session["Sitedesc"] </h3>-->
-                                @*<p> xyz </p>*@
-                            <!--</div>-->
-                            @*<div class="my-account-wrap clearfix">
-                <div class="my-account float-right mr-3 mt-3">
-                    <span>My Account</span>
-                    <span><a href="#"><img src="~/Content/img/user.svg"></a></span>
-                </div>
-            </div>*@
-                    
-
-                            
-                            @*</div>*@
                             <section>
                                 @{
                                     Html.RenderPartial("PartialLayout", Model);
@@ -144,13 +119,8 @@
             </div>
         </div>
     </div>
-
-    @*<script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>*@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Content/js/main_new.js"></script>
-    @*<script src="~/Scripts/jquery.dataTables.min.js"></script>
-        <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>*@
-
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>

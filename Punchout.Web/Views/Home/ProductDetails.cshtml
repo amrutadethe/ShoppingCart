@@ -62,28 +62,6 @@
                     </tr>
                     
                 </table>
-
-                @*</div>
-
-                    <dl>
-                        <dd>
-                            @Html.DisplayFor(model => model.ItemCode)
-                        </dd>
-                        <dd>
-                            @Html.DisplayFor(model => model.ItemCodeDesc)
-                        </dd>
-                        <dd>
-
-
-                            @Html.DisplayFor(model=>model.Category1, "" + model =>model.Category1+".jpg")
-                        </dd>
-
-                        <dd>
-                    @Html.DisplayFor(model => model.Category2)
-                </dd>
-
-                    </dl>
-        </div>*@
                 <span class="UnitCost">
                     @{
                         var Price = "Your Price:" + Convert.ToString(Model.StandardUnitPrice);
@@ -96,12 +74,6 @@
                          alt="Add To Cart" style="border-width: 0" />
                 </a>
                 <br /><br />
-                @*<div>
-
-            @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-            @Html.ActionLink("Back to List", "Index")
-
-        </div>*@
             </div>
     </div>
 

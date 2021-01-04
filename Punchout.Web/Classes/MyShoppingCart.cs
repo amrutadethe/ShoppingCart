@@ -27,9 +27,6 @@ namespace Punchout.Web.Classes
                                   where c.CartID == cartID &&
                                       c.ProductID == productID
                                   select c).FirstOrDefault();
-                    // var myItem = db.ShoppingCarts.SingleOrDefault(
-                    //c => c.CartID == cartID
-                    //&& c.ProductID == productID);
                     if (myItem == null)
                     {
                         ShoppingCart cartadd = new ShoppingCart();
@@ -52,6 +49,7 @@ namespace Punchout.Web.Classes
                 }
             }
         }
+
         /// <summary>
         /// Get Cart Added Total Item quantity
         /// </summary>
@@ -68,7 +66,6 @@ namespace Punchout.Web.Classes
                     if (myCart.Count() > 0)
                     {
                         cartTotal = myCart.Sum(od => (decimal)od.Quantity * ((decimal)od.UnitCost + (decimal)od.UDF_ENVIRONMENTAL + (decimal)od.UDF_FREIGHT + (decimal)od.UDF_FUEL + (decimal)od.UDF_OTHER + (decimal)od.UDF_PALLET));
-                        //cartTotal = myCart.Count();
                     }
                 }
                 catch (Exception exp)
@@ -79,6 +76,7 @@ namespace Punchout.Web.Classes
                 return (cartTotal);
             }
         }
+
         /// <summary>
         /// Update My Shopping Cart quantity and Remove Item
         /// </summary>
@@ -98,6 +96,7 @@ namespace Punchout.Web.Classes
                 UpdateItem(cartId, ItemCode, Convert.ToInt32(Quantity));
             }
         }
+
         /// <summary>
         /// Remove Item in shopping Cart
         /// </summary>
@@ -127,6 +126,7 @@ namespace Punchout.Web.Classes
                 }
             }
         }
+
         /// <summary>
         /// Update Item qunatity in shopping Cart
         /// </summary>

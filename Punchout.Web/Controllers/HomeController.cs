@@ -22,19 +22,19 @@ namespace Punchout.Web.Controllers
 {
     public class HomeController : Controller
     {
+        #region
         string cmis_portal = ConfigurationManager.ConnectionStrings["cmis_portal"].ConnectionString;
         string MAS_CML = ConfigurationManager.ConnectionStrings["MAS_CML"].ConnectionString;
         DALProduct objDALproductList = new DALProduct();
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
+        #endregion
 
-        // public const string CartId = "PunchOut_CartID";
         /// <summary>
         /// Bind Site Dropdown data and Show Home page
         /// </summary>
         /// <returns></returns>
         public ActionResult Index()
-        
         {
             if (Request.QueryString["HOOK_URL"] == null && Session["HOOK_URL"] == null)
             {
@@ -48,8 +48,6 @@ namespace Punchout.Web.Controllers
                 }
                 hw_sites objhwsite = new hw_sites();
                 DataSet ds = new DataSet();
-
-                //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
                 using (SqlConnection con = new SqlConnection(cmis_portal))
                 {
                     using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
@@ -75,6 +73,7 @@ namespace Punchout.Web.Controllers
                 return View("Index",objhwsite);
             }
         }
+
         /// <summary>
         /// Bind Search panel Data and return  partialview
         /// </summary>
@@ -83,8 +82,6 @@ namespace Punchout.Web.Controllers
         {
             hw_sites objhwsite = new hw_sites();
             DataSet ds = new DataSet();
-
-            //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
             using (SqlConnection con = new SqlConnection(cmis_portal))
             {
                 using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
@@ -98,49 +95,14 @@ namespace Punchout.Web.Controllers
                         hw_sites hwsite_obj = new hw_sites();
                         hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
                         hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
-
                         sitelist.Add(hwsite_obj);
                     }
                     objhwsite.siteinfo = sitelist;
                 }
                 con.Close();
             }
-            // return View(objhwsite);
             return PartialView(objhwsite);
         }
-        /// <summary>
-        /// Partial Layout old view
-        /// </summary>
-        /// <returns></returns>
-        //public ActionResult PartialLayout_old()
-        //{
-        //    hw_sites objhwsite = new hw_sites();
-        //    DataSet ds = new DataSet();
-
-        //    //using (SqlConnection con = new SqlConnection("Data Source=PUNE-LAPTOP-136;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
-        //    using (SqlConnection con = new SqlConnection("Data Source=.;Initial Catalog=cmis_portal_uat;User ID=sa;Password=pass123!@#"))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
-        //        {
-        //            con.Open();
-        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
-        //            da.Fill(ds);
-        //            List<hw_sites> sitelist = new List<hw_sites>();
-        //            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-        //            {
-        //                hw_sites hwsite_obj = new hw_sites();
-        //                hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
-        //                hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
-
-        //                sitelist.Add(hwsite_obj);
-        //            }
-        //            objhwsite.siteinfo = sitelist;
-        //        }
-        //        con.Close();
-        //    }
-        //    // return View(objhwsite);
-        //    return PartialView(objhwsite);
-        //}
 
         /// <summary>
         /// Show all products for selected site or Entered Itemcode or Item desc
@@ -158,8 +120,6 @@ namespace Punchout.Web.Controllers
             Session["Sitedesc"] = site_desc;
             if (Session["Site_Code"] == null)
                 Session["Site_Code"] = site_code;
-            //TempData["Sitedesc"] = sitedesc;
-            //TempData.Keep();
             ProductListViewModel model = new ProductListViewModel();
             List<CI_Item> getList = new List<CI_Item>();
             IPagedList<CI_Item> PageList = null;
@@ -168,19 +128,14 @@ namespace Punchout.Web.Controllers
                 getList = objBALProductList.GetProductListByItemCode(itemText, site_code, site_desc);
             }
             else
-            
                 getList = objBALProductList.GetProductList(searchText, itemText, Convert.ToString(Session["Site_Code"]), site_desc);
-         
             foreach (var item in getList)
-            {
-                // For each row which is bound, we need to also look up its lead time
-                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
-                //using (SqlConnection conLead = new SqlConnection("Data Source=massql\\massql;Initial Catalog=MAS_SYSTEM;Persist Security Info=True; User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
+            { 
+                string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
                 using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
                     conLead.Open();
-
                     SqlDataReader reader = com.ExecuteReader();
                     if (reader.HasRows==true)
                     {
@@ -189,13 +144,10 @@ namespace Punchout.Web.Controllers
                             if (reader[0] != System.DBNull.Value)
                             {
                                 int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                                //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
-                                // e.Row.Cells[4].Text = Convert.ToString(newDays);
                                 item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
                             }
                             else
                             {
-                                //e.Row.Cells[4].Text = "0";
                                 item.UDF_HNW_CLASSIFICATION_CODE = "0";
                             }
                         }
@@ -207,15 +159,14 @@ namespace Punchout.Web.Controllers
                     reader.Close();
                     conLead.Close();
                 }
-              
             }
-
             PageList = getList.ToPagedList(PageIndex, PageSize);
             model.totalProductCount = getList.Count();
             model.productList = PageList;
             return View(model);
         }
-       /// <summary>
+       
+        /// <summary>
        /// Return Days to calculate for the standard lead time
        /// </summary>
        /// <param name="days"></param>
@@ -347,6 +298,7 @@ namespace Punchout.Web.Controllers
 
             return newDays;
         }
+
         /// <summary>
         /// Show all products for selected site
         /// </summary>
@@ -362,17 +314,13 @@ namespace Punchout.Web.Controllers
             Session["Sitedesc"] = site_desc;
             if (Session["Site_Code"] == null)
                 Session["Site_Code"] = site_code;
-            //TempData["Sitedesc"] = sitedesc;
-            //TempData.Keep();
             ProductListViewModel model = new ProductListViewModel();
             List<CI_Item> getList = new List<CI_Item>();
             IPagedList<CI_Item> PageList = null;
                 getList = objBALProductList.GetProductListByItemCode("", site_code, site_desc);
             foreach (var item in getList)
             {
-                // For each row which is bound, we need to also look up its lead time
-                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
-                //using (SqlConnection conLead = new SqlConnection("Data Source=massql\\massql;Initial Catalog=MAS_SYSTEM;Persist Security Info=True; User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
+                string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
                 using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
@@ -386,13 +334,10 @@ namespace Punchout.Web.Controllers
                             if (reader[0] != System.DBNull.Value)
                             {
                                 int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                                //e.Row.Cells[4].Text = Convert.ToString(reader[0]);
-                                // e.Row.Cells[4].Text = Convert.ToString(newDays);
                                 item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
                             }
                             else
                             {
-                                //e.Row.Cells[4].Text = "0";
                                 item.UDF_HNW_CLASSIFICATION_CODE = "0";
                             }
                         }
@@ -412,6 +357,7 @@ namespace Punchout.Web.Controllers
             model.productList = PageList;
             return View("ProductList", model);
         }
+
         /// <summary>
         /// Show ProductDetails to selected Item
         /// </summary>
@@ -421,7 +367,6 @@ namespace Punchout.Web.Controllers
         {
             
             var getProductDetails = objBALProductList.GetProductDetails(id);
-                // For each row which is bound, we need to also look up its lead time
                 string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';"; 
                 using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
@@ -469,6 +414,7 @@ namespace Punchout.Web.Controllers
 
             return View();
         }
+
         /// <summary>
         /// New Item Addition
         /// </summary>
@@ -477,6 +423,7 @@ namespace Punchout.Web.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// Get Cart Id
         /// </summary>
@@ -492,6 +439,7 @@ namespace Punchout.Web.Controllers
             }
             return Session["CartId"].ToString();
         }
+
         /// <summary>
         /// Added Products To Cart
         /// </summary>
@@ -515,6 +463,7 @@ namespace Punchout.Web.Controllers
             }
             return RedirectToAction("MyShoppingCart");
         }
+
         /// <summary>
         /// showing Cart Product List
         /// </summary>
@@ -558,6 +507,7 @@ namespace Punchout.Web.Controllers
             var getCartitem = objBALProductList.GetMyShoopingCartList(Convert.ToString(Session["CartId"]));
             return View("MyShoppingCart", getCartitem);
         }
+
         /// <summary>
         /// Update Cart Quantity and Remove Item
         /// </summary>
@@ -586,6 +536,7 @@ namespace Punchout.Web.Controllers
             }
             return Json(new { success = true, Message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// Cancel current shopping visit.This will remove all items in your shopping cart and reset your site.
         /// </summary>
@@ -597,9 +548,8 @@ namespace Punchout.Web.Controllers
             Session["Site_Code"] = null;
             // Remove all entries from the user's shopping cart
             // Now that we are all done, we need to clear out this user's shopping cart
-            string deleteString = "DELETE FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
+            string deleteString = "DELETE FROM [dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
             int numRows1 = 0;
-            //using (SqlConnection condel = new SqlConnection("Data Source=massql\\massql;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
             using (SqlConnection condel = new SqlConnection(cmis_portal))
             {
                 SqlCommand com3 = new SqlCommand(deleteString, condel);
@@ -614,58 +564,35 @@ namespace Punchout.Web.Controllers
                     Response.Write("SQL ERROR: " + ex.Message);
                 }
             }
-
-            //  Response.Redirect(VirtualPathUtility.ToAbsolute("~/Default.aspx"));
             return RedirectToAction("Index");
         }
 
-        //[HttpGet]
-        //public ActionResult PagenationProductList(int? page)
-        //{
-        //    var dummyItems = Enumerable.Range(1, 150).Select(x => "Item " + x);
-        //    var pager = new Pager(dummyItems.Count(), page);
-
-        //    var viewModel = new PagerModel
-        //    {
-        //        Items = dummyItems.Skip((pager.CurrentPage - 1) * pager.PageSize).Take(pager.PageSize),
-        //        Pager = pager
-        //    };
-
-        //    return View(viewModel);
-        //}
         /// <summary>
         /// Place Order.Submit and return to EBP
         /// </summary>
         /// <returns></returns>
         public ActionResult CheckOut()
         {
-            string queryString = "SELECT * FROM [cmis_portal_uat].[dbo].[ViewCart] WHERE CartID = '" + Session["PunchOut_CartID"] + "';";
-            string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [cmis_portal_uat].[dbo].[PunchOrders] ORDER BY orderno DESC;";
+            string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["PunchOut_CartID"] + "';";
+            string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [dbo].[PunchOrders] ORDER BY orderno DESC;";
             string hiddenHTML = "";
             int x = 0;
             bool hasFreight = false;
             bool hasFuel = false;
-
             string unitPrice = "";
             double dunitPrice = 0;
             double totalItemPrice = 0;
             string stotalItemPrice = "";
             double totPrice = 0;
             string stotPrice = "";
-            //string emailBody = "";
-            //string stoAddress = "";
             string orderNo = "";
             int iorderNo = 0;
-            //using (SqlConnection sqlcon = new SqlConnection("Data Source=massql\\massql;Initial Catalog=cmis_portal_uat;Persist Security Info=True;User ID=CMIS;Password=Chemico;MultipleActiveResultSets=True"))
             using (SqlConnection sqlcon = new SqlConnection(cmis_portal))
             {
                 SqlCommand orcom = new SqlCommand(queryString3, sqlcon);
                 sqlcon.Open();
-
                 SqlDataReader orreader = orcom.ExecuteReader();
-
                 orreader.Read();
-
                 if (orreader.HasRows)
                 {
                     iorderNo = Convert.ToInt16(orreader[0]);
@@ -675,7 +602,6 @@ namespace Punchout.Web.Controllers
                     orderNo = "PNCH-" + orderNo;
                 }
             }
-
             using (SqlConnection con = new SqlConnection(cmis_portal))
             {
                 SqlCommand com = new SqlCommand(queryString, con);
@@ -695,24 +621,19 @@ namespace Punchout.Web.Controllers
                         hasFreight = true;
                         totalItemPrice = totalItemPrice + (Convert.ToDouble(reader[11]) / Convert.ToDouble(reader[4]));
                     }
-
                     // now check if the product has a fuel charge
                     if (Convert.ToDouble(reader[12]) > 0 && hasFuel == false)
                     {
                         hasFuel = true;
                         totalItemPrice = totalItemPrice + (Convert.ToDouble(reader[12]) / Convert.ToDouble(reader[4]));
                     }
-
                     // Now we can just add the others in as they are per ite, per quantity
                     totalItemPrice = totalItemPrice + Convert.ToDouble(reader[10]) + Convert.ToDouble(reader[13]) + Convert.ToDouble(reader[14]);
                     stotalItemPrice = String.Format("{0:0.00}", totalItemPrice);
-
                     // Convert the StandardLeadTime into an equivalent with checking if we need to account for Honeywell
                     // counting weekends as business days
-
                     int newDays = int.Parse(((reader[6]) == null || (reader[6]).ToString() == string.Empty) ? "0" : (reader[6]).ToString());
                     DateTime cur = System.DateTime.Now;
-
                     switch (cur.DayOfWeek)
                     {
                         case DayOfWeek.Monday:
@@ -834,7 +755,6 @@ namespace Punchout.Web.Controllers
                     }
 
                     hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-DESCRIPTION[" + x + @"]"" value=""" + reader[2] + @""">";
-                    //hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-MATNR[" + x + @"]"" value="""">";
                     hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-MATGROUP[" + x + @"]"" value=""" + reader[15] + @""">";
                     hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-QUANTITY[" + x + @"]"" value=""" + reader[4] + @""">";
                     hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-UNIT[" + x + @"]"" value=""" + reader[5] + @""">";
@@ -859,14 +779,11 @@ namespace Punchout.Web.Controllers
                 con.Close();
             }
             stotPrice = String.Format("{0:0.00}", totPrice);
-
             // the form submission to HubWoo
             Response.Write(hiddenHTML);
-
-            // Now that we are all done, we need to clear out this user's shopping cart
-            string deleteString = "DELETE FROM [cmis_portal_uat].[dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
+            string deleteString = "DELETE FROM [dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
             String Date = DateTime.Now.ToString("dd/MM/yyyy");
-            string orderString = "INSERT INTO [cmis_portal_uat].[dbo].[PunchOrders] VALUES(getdate(), '" + Session["UserName"] + "');";
+            string orderString = "INSERT INTO [dbo].[PunchOrders] VALUES(getdate(), '" + Session["UserName"] + "');";
             int numRows1 = 0;
             int numRows2 = 0;
             using (SqlConnection condel = new SqlConnection(cmis_portal))
@@ -876,10 +793,8 @@ namespace Punchout.Web.Controllers
                 condel.Open();
                 numRows1 = com3.ExecuteNonQuery();
                 numRows2 = com4.ExecuteNonQuery();
-
                 condel.Close();
             }
-
             return View();
         }
     }

@@ -53,7 +53,6 @@
                 <div class="form-group btn-align">
                     <label for="products" class="label-name text-nowrap">Show all products for your site:</label>
                     <input type="submit" value="Show All" class="btn btn-showall" onclick="location.href='@Url.Action("ProductListBySite", "Home")?site_code=' + $('#ddlSite').val()" />
-                    @*<button type="submit" value="Show All" class="btn btn-cancel">Show All</button>*@
 
                 </div>
             </div>
@@ -61,7 +60,6 @@
             <div>
                 <div class="form-group btn-align" id="dvPassport">
                     <label for="cancel_shopping" class="label-name text-nowrap">Cancel Shopping:</label>
-                    @*<a class="btn btn-cancel">Cancel</a>*@
                     <input type="button" value="Cancel" id="buttonID" onclick="myFunction()" class=" btn btn-cancel js-click" />
                 </div>
             </div>
@@ -91,49 +89,11 @@
 
            var sitedesc= $("#hfsite_desc").val($(this).find("option:selected").text());
             document.forms["Form1"].submit();
-
-
         });
-
-            //$(function () {
-            //    $("#buttonID").click(function (event) {
-            //        event.preventDefault();
-            //        $('<div title="Confirm Box"></div>').dialog({
-            //            open: function (event, ui) {
-            //                $(this).html("Yes or No question?");
-            //            },
-            //            close: function () {
-            //                $(this).remove();
-            //            },
-            //            resizable: false,
-            //            height: 140,
-            //            modal: true,
-            //            buttons: {
-            //                'Yes': function () {
-            //                    $(this).dialog('close');
-            //                    $.post('url/theValueYouWantToPass');
-
-            //                },
-            //                'No': function () {
-            //                    $(this).dialog('close');
-            //                    $.post('url/theOtherValueYouWantToPAss');
-            //                }
-            //            }
-            //        });
-            //    });
-            //});
-
-
-
-
-
-
             function myFunction() {
                 var x;
                 if (confirm("Are you sure you want to cancel your current shopping visit?  This will remove all items in your shopping cart and reset your site.!") == true) {
                     window.location.href='@Url.Action("CancelSite", "Home")'
-                    //return true;
-                 @*@Html.ActionLink("CancelSite", "Home")*@
 
                 } else {
                     return false;
@@ -147,7 +107,6 @@
                     });
                 });
             </script>
-            @*@Html.ActionLink("ClicktoConfirm", "Home", null, new { onclick = "return myFunction()" })*@
         }
     </body>
 </html>
