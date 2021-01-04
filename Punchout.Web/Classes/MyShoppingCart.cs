@@ -89,7 +89,6 @@ namespace Punchout.Web.Classes
             if (Convert.ToInt32(Quantity) < 1 || Remove == true)
             {
                 RemoveItem(cartId, ItemCode);
-
             }
             else
             {

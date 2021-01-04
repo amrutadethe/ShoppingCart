@@ -11,8 +11,9 @@
 
     <div id="centerColumn">
         <div>
-            <h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.totalProductCount Items Found</h3>
-            <p class="NormalRed" >
+            @*<h3 style="font-weight:bold;font-size:21px;">Showing all products- @Model.totalProductCount Items Found</h3>*@
+            <h3 style="font-weight:bold;font-size:21px;">@Session["ProductListTitle"] @Model.totalProductCount Items Found</h3>
+            <p class="NormalRed">
                 These are the approved HS&E items for your site. To add items to your approved list, please use the link above.
             </p>
             <div class="table-responsive">
@@ -38,7 +39,7 @@
                             </th>
                             <th>Details</th>
                             <th>Add To Cart</th>
-                            
+
                         </tr>
                         @foreach (var item in Model.productList)
                         {
@@ -72,7 +73,7 @@
                     </table>
 
                     Page@(Model.productList.PageCount < Model.productList.PageNumber ? 0 : Model.productList.PageNumber) of @Model.productList.PageCount
-                    @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc=Session["Sitedesc"], page }))                  
+                    @Html.PagedListPager(Model.productList, page => Url.Action("ProductList", new { @site_desc = Session["Sitedesc"], page }))
                 </div>
 
             </div>

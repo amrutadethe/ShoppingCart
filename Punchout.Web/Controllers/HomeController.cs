@@ -28,6 +28,7 @@ namespace Punchout.Web.Controllers
         DALProduct objDALproductList = new DALProduct();
         BALProduct objBALProductList = new BALProduct();
         MAS_CMLEntities objMAS_CMLEntities = new MAS_CMLEntities();
+        log4net.ILog logger = log4net.LogManager.GetLogger(typeof(HomeController));  //Declaring Log4Net
         #endregion
 
         /// <summary>
@@ -36,22 +37,63 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            if (Request.QueryString["HOOK_URL"] == null && Session["HOOK_URL"] == null)
+            try
             {
-                return View("NoUser");
-            }
-            else
-            {
-                if (Session["HOOK_URL"] == null)
+                if (Request.QueryString["HOOK_URL"] == null && Session["HOOK_URL"] == null)
                 {
-                    Session["HOOK_URL"] = Request.QueryString["HOOK_URL"];
+                    return View("NoUser");
                 }
+                else
+                {
+                    if (Session["HOOK_URL"] == null)
+                    {
+                        Session["HOOK_URL"] = Request.QueryString["HOOK_URL"];
+                    }
+                    hw_sites objhwsite = new hw_sites();
+                    DataSet ds = new DataSet();
+                    using (SqlConnection con = new SqlConnection(cmis_portal))
+                    {
+                        using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
+                        {
+                            con.Open();
+                            SqlDataAdapter da = new SqlDataAdapter(cmd);
+                            da.Fill(ds);
+                            List<hw_sites> sitelist = new List<hw_sites>();
+                            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                            {
+                                hw_sites hwsite_obj = new hw_sites();
+                                hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
+                                hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
+                                sitelist.Add(hwsite_obj);
+                            }
+                            objhwsite.siteinfo = sitelist;
+                        }
+                        con.Close();
+                    }
+
+                    return View("Index", objhwsite);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                return View();
+            }
+        }
+
+        /// <summary>
+        /// Bind Search panel Data and return  partialview
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult PartialLayout()
+        {
+            try
+            {
                 hw_sites objhwsite = new hw_sites();
                 DataSet ds = new DataSet();
                 using (SqlConnection con = new SqlConnection(cmis_portal))
                 {
                     using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
-
                     {
                         con.Open();
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -62,46 +104,19 @@ namespace Punchout.Web.Controllers
                             hw_sites hwsite_obj = new hw_sites();
                             hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
                             hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
-
                             sitelist.Add(hwsite_obj);
                         }
                         objhwsite.siteinfo = sitelist;
                     }
                     con.Close();
                 }
-
-                return View("Index",objhwsite);
+                return PartialView(objhwsite);
             }
-        }
-
-        /// <summary>
-        /// Bind Search panel Data and return  partialview
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult PartialLayout()
-        {
-            hw_sites objhwsite = new hw_sites();
-            DataSet ds = new DataSet();
-            using (SqlConnection con = new SqlConnection(cmis_portal))
+            catch (Exception ex)
             {
-                using (SqlCommand cmd = new SqlCommand("select * from hw_sites", con))
-                {
-                    con.Open();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(ds);
-                    List<hw_sites> sitelist = new List<hw_sites>();
-                    for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-                    {
-                        hw_sites hwsite_obj = new hw_sites();
-                        hwsite_obj.site_code = ds.Tables[0].Rows[i]["site_code"].ToString();
-                        hwsite_obj.site_desc = ds.Tables[0].Rows[i]["site_desc"].ToString();
-                        sitelist.Add(hwsite_obj);
-                    }
-                    objhwsite.siteinfo = sitelist;
-                }
-                con.Close();
+                logger.Error(ex.ToString());
+                return View();
             }
-            return PartialView(objhwsite);
         }
 
         /// <summary>
@@ -114,58 +129,84 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult ProductList(string searchText, string itemText, string site_code, string site_desc, int? page)
         {
-            int PageIndex = 1;
-            int PageSize = 20;
-            PageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            Session["Sitedesc"] = site_desc;
-            if (Session["Site_Code"] == null)
-                Session["Site_Code"] = site_code;
-            ProductListViewModel model = new ProductListViewModel();
-            List<CI_Item> getList = new List<CI_Item>();
-            IPagedList<CI_Item> PageList = null;
-            if (Request.Form["submit"] == "Show All")
+            try
             {
-                getList = objBALProductList.GetProductListByItemCode(itemText, site_code, site_desc);
-            }
-            else
-                getList = objBALProductList.GetProductList(searchText, itemText, Convert.ToString(Session["Site_Code"]), site_desc);
-            foreach (var item in getList)
-            { 
-                string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
-                using (SqlConnection conLead = new SqlConnection(MAS_CML))
+                
+                int PageIndex = 1;
+                int PageSize = 20;
+                PageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+                Session["Sitedesc"] = site_desc;
+                if (Session["Site_Code"] == null)
+                    Session["Site_Code"] = site_code;
+                if(searchText=="" && itemText!="")
                 {
-                    SqlCommand com = new SqlCommand(selStr, conLead);
-                    conLead.Open();
-                    SqlDataReader reader = com.ExecuteReader();
-                    if (reader.HasRows==true)
+                    Session["ProductListTitle"] = "Products with item codes matching '" + itemText + "' - ";
+                }
+                else if(searchText != "" && itemText == "")
+                {
+                    Session["ProductListTitle"] = "Products with descriptions matching '" + searchText + "' - ";
+                }
+                else if(searchText != "" && itemText != "")
+                {
+                    Session["ProductListTitle"] = "Products with descriptions matching '" + searchText + "' and item codes matching '" + itemText + "' - ";
+                }
+                else
+                {
+                    Session["ProductListTitle"]= "Showing all products - ";
+                }
+                ProductListViewModel model = new ProductListViewModel();
+                List<CI_Item> getList = new List<CI_Item>();
+                IPagedList<CI_Item> PageList = null;
+                if (Request.Form["submit"] == "Show All")
+                {
+                    getList = objBALProductList.GetProductListByItemCode(itemText, site_code, site_desc);
+                }
+               
+                else
+                    getList = objBALProductList.GetProductList(searchText, itemText, Convert.ToString(Session["Site_Code"]), site_desc);
+                foreach (var item in getList)
+                {
+                    string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
+                    using (SqlConnection conLead = new SqlConnection(MAS_CML))
                     {
-                        while (reader.Read())
+                        SqlCommand com = new SqlCommand(selStr, conLead);
+                        conLead.Open();
+                        SqlDataReader reader = com.ExecuteReader();
+                        if (reader.HasRows == true)
                         {
-                            if (reader[0] != System.DBNull.Value)
+                            while (reader.Read())
                             {
-                                int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                                item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
-                            }
-                            else
-                            {
-                                item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                                if (reader[0] != System.DBNull.Value)
+                                {
+                                    int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
+                                    item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                                }
+                                else
+                                {
+                                    item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                                }
                             }
                         }
+                        else
+                        {
+                            item.UDF_HNW_CLASSIFICATION_CODE = " ";
+                        }
+                        reader.Close();
+                        conLead.Close();
                     }
-                    else
-                    {
-                        item.UDF_HNW_CLASSIFICATION_CODE = " ";
-                    }
-                    reader.Close();
-                    conLead.Close();
                 }
+                PageList = getList.ToPagedList(PageIndex, PageSize);
+                model.totalProductCount = getList.Count();
+                model.productList = PageList;
+                return View(model);
             }
-            PageList = getList.ToPagedList(PageIndex, PageSize);
-            model.totalProductCount = getList.Count();
-            model.productList = PageList;
-            return View(model);
-        }
-       
+            catch(Exception ex)
+            {
+                logger.Error(ex.ToString());
+                return View();
+            }
+            }
+
         /// <summary>
        /// Return Days to calculate for the standard lead time
        /// </summary>
@@ -295,7 +336,6 @@ namespace Punchout.Web.Controllers
                     newDays += 2;
                     break;
             }
-
             return newDays;
         }
 
@@ -308,19 +348,75 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult ProductListBySite( string site_code, string site_desc, int? page)
         {
-            int PageIndex = 1;
-            int PageSize = 20;
-            PageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
-            Session["Sitedesc"] = site_desc;
-            if (Session["Site_Code"] == null)
-                Session["Site_Code"] = site_code;
-            ProductListViewModel model = new ProductListViewModel();
-            List<CI_Item> getList = new List<CI_Item>();
-            IPagedList<CI_Item> PageList = null;
-                getList = objBALProductList.GetProductListByItemCode("", site_code, site_desc);
-            foreach (var item in getList)
+            try
             {
-                string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
+                int PageIndex = 1;
+                int PageSize = 20;
+                PageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+                Session["Sitedesc"] = site_desc;
+                if (Session["Site_Code"] == null)
+                    Session["Site_Code"] = site_code;
+                ProductListViewModel model = new ProductListViewModel();
+                List<CI_Item> getList = new List<CI_Item>();
+                IPagedList<CI_Item> PageList = null;
+                getList = objBALProductList.GetProductListByItemCode("", site_code, site_desc);
+                foreach (var item in getList)
+                {
+                    string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + item.ItemCode + "';";
+                    using (SqlConnection conLead = new SqlConnection(MAS_CML))
+                    {
+                        SqlCommand com = new SqlCommand(selStr, conLead);
+                        conLead.Open();
+
+                        SqlDataReader reader = com.ExecuteReader();
+                        if (reader.HasRows == true)
+                        {
+                            while (reader.Read())
+                            {
+                                if (reader[0] != System.DBNull.Value)
+                                {
+                                    int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
+                                    item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+                                }
+                                else
+                                {
+                                    item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            item.UDF_HNW_CLASSIFICATION_CODE = " ";
+                        }
+                        reader.Close();
+                        conLead.Close();
+                    }
+
+                }
+
+                PageList = getList.ToPagedList(PageIndex, PageSize);
+                model.totalProductCount = getList.Count();
+                model.productList = PageList;
+                return View("ProductList", model);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.ToString());
+                return View();
+            }
+        }
+
+        /// <summary>
+        /// Show ProductDetails to selected Item
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult ProductDetails(string id)
+        {
+            try
+            {
+                var getProductDetails = objBALProductList.GetProductDetails(id);
+                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';";
                 using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
@@ -334,77 +430,34 @@ namespace Punchout.Web.Controllers
                             if (reader[0] != System.DBNull.Value)
                             {
                                 int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-                                item.UDF_HNW_CLASSIFICATION_CODE = Convert.ToString(newDays);
+
+                                Session["StandardTime"] = "Standard Lead Time: " + Convert.ToString(newDays) + " days";
                             }
                             else
                             {
-                                item.UDF_HNW_CLASSIFICATION_CODE = "0";
+                                Session["StandardTime"] = "Standard Lead Time: Not Available";
                             }
                         }
                     }
                     else
                     {
-                        item.UDF_HNW_CLASSIFICATION_CODE = " ";
+                        Session["StandardTime"] = "Standard Lead Time: Not Available";
                     }
                     reader.Close();
                     conLead.Close();
                 }
-
+                return View("ProductDetails", getProductDetails);
             }
-
-            PageList = getList.ToPagedList(PageIndex, PageSize);
-            model.totalProductCount = getList.Count();
-            model.productList = PageList;
-            return View("ProductList", model);
-        }
-
-        /// <summary>
-        /// Show ProductDetails to selected Item
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult ProductDetails(string id)
-        {
-            
-            var getProductDetails = objBALProductList.GetProductDetails(id);
-                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';"; 
-                using (SqlConnection conLead = new SqlConnection(MAS_CML))
-                {
-                    SqlCommand com = new SqlCommand(selStr, conLead);
-                    conLead.Open();
-
-                    SqlDataReader reader = com.ExecuteReader();
-                if (reader.HasRows == true)
-                {
-                    while (reader.Read())
-                    {
-                        if (reader[0] != System.DBNull.Value)
-                        {
-                            int newDays = AddExtraDays(Convert.ToInt16(reader[0]));
-
-                            Session["StandardTime"] = "Standard Lead Time: " + Convert.ToString(newDays) + " days";
-                        }
-                        else
-                        {
-                            Session["StandardTime"] = "Standard Lead Time: Not Available";
-                        }
-                    }
-                }
-                else
-                {
-                    Session["StandardTime"] = "Standard Lead Time: Not Available";
-                }
-                    reader.Close();
-                    conLead.Close();
-                }
-
-            return View("ProductDetails", getProductDetails);
+            catch(Exception ex)
+            {
+                logger.Error(ex.ToString());
+                return View();
+            }
         }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
             return View();
         }
 
@@ -430,10 +483,8 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public string GetShoppingCartId()
         {
-
             if (Session["CartId"] == null)
             {
-
                 Session["CartId"] = System.Web.HttpContext.Current.Request.IsAuthenticated ?
                       User.Identity.Name : Guid.NewGuid().ToString();
             }
@@ -447,21 +498,30 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult AddToCart(string id)
         {
-            string productId;
-            if (!String.IsNullOrEmpty(id))
+            try
             {
-                MyShoppingCart usersShoppingCart = new MyShoppingCart();
-                string cartId = GetShoppingCartId();
-                productId = id;
-                usersShoppingCart.AddItem(cartId, productId, 1);
-
+                string productId;
+                if (!String.IsNullOrEmpty(id))
+                {
+                    MyShoppingCart usersShoppingCart = new MyShoppingCart();
+                    string cartId = GetShoppingCartId();
+                    productId = id;
+                    usersShoppingCart.AddItem(cartId, productId, 1);
+                    return RedirectToAction("MyShoppingCart");
+                }
+                else
+                {
+                    //  return Content("<script language='javascript' type='text/javascript'>alert('We should never get to AddToCart without a ProductId.');</script>");
+                    Debug.Fail("ERROR : We should never get to AddToCart.aspx without a ProductId.");
+                    throw new Exception("ERROR : It is illegal to load AddToCart.aspx without setting a ProductId.");
+                }
+               
             }
-            else
+            catch(Exception ex)
             {
-                Debug.Fail("ERROR : We should never get to AddToCart.aspx without a ProductId.");
-                throw new Exception("ERROR : It is illegal to load AddToCart.aspx without setting a ProductId.");
+                logger.Error(ex.ToString());
+                return View();
             }
-            return RedirectToAction("MyShoppingCart");
         }
 
         /// <summary>
@@ -470,42 +530,50 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult MyShoppingCart()
         {
-            MyShoppingCart usersShoppingCart = new MyShoppingCart();
-            String cartId = GetShoppingCartId();
-            Session["PunchOut_CartID"] = cartId;
-            decimal cartTotal = 0;
-            cartTotal = usersShoppingCart.GetTotal(cartId);
-            if (cartTotal > 0)
+            try
             {
-                ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
-                ViewBag.ShoppingCartTitle = "Shopping Cart";
-            }
-            else
-            {
-                ViewBag.ShoppingCartTitle = "Shopping Cart is Empty";
-                ViewBag.lblTotal = "";
-                ViewBag.LabelTotalText = "";
-            }
-            if (Request.UrlReferrer != null && Request.QueryString["method"] != "noadd")
-            {
-                if (Request.UrlReferrer.ToString().Contains("ProductList") || Request.UrlReferrer.ToString().Contains("ProductDetails"))
+                MyShoppingCart usersShoppingCart = new MyShoppingCart();
+                String cartId = GetShoppingCartId();
+                Session["PunchOut_CartID"] = cartId;
+                decimal cartTotal = 0;
+                cartTotal = usersShoppingCart.GetTotal(cartId);
+                if (cartTotal > 0)
                 {
-                    ViewBag.statusLabel = "Successfully added item to shopping cart.";
+                    ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
+                    ViewBag.ShoppingCartTitle = "Shopping Cart";
                 }
+                else
+                {
+                    ViewBag.ShoppingCartTitle = "Shopping Cart is Empty";
+                    ViewBag.lblTotal = "";
+                    ViewBag.LabelTotalText = "";
+                }
+                if (Request.UrlReferrer != null && Request.QueryString["method"] != "noadd")
+                {
+                    if (Request.UrlReferrer.ToString().Contains("ProductList") || Request.UrlReferrer.ToString().Contains("ProductDetails"))
+                    {
+                        ViewBag.statusLabel = "Successfully added item to shopping cart.";
+                    }
+                }
+                else
+                {
+                    ViewBag.statusLabel = "";
+                }
+                int numRows = 0;
+                DataTable dt = new DataTable();
+                dt = objBALProductList.GetQuantity(Convert.ToString(Session["CartId"]));
+                if (dt.Rows.Count > 0)
+                {
+                    numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
+                }
+                var getCartitem = objBALProductList.GetMyShoopingCartList(Convert.ToString(Session["CartId"]));
+                return View("MyShoppingCart", getCartitem);
             }
-            else
+            catch(Exception ex)
             {
-                ViewBag.statusLabel = "";
+                logger.Error(ex.ToString());
+                return View();
             }
-            int numRows = 0;
-            DataTable dt = new DataTable();
-            dt = objBALProductList.GetQuantity(Convert.ToString(Session["CartId"]));
-            if (dt.Rows.Count > 0)
-            {
-                numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
-            }
-            var getCartitem = objBALProductList.GetMyShoopingCartList(Convert.ToString(Session["CartId"]));
-            return View("MyShoppingCart", getCartitem);
         }
 
         /// <summary>
@@ -515,26 +583,34 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult UpdateShoppingCart(string str2)
         {
-            MyShoppingCart usersShoppingCart = new MyShoppingCart();
-            String cartId = GetShoppingCartId();
-            DataTable list1 = (DataTable)JsonConvert.DeserializeObject(str2, (typeof(DataTable)));
-            for (int i = 0; i < list1.Rows.Count; i++)
+            try
             {
-                if (Convert.ToString(list1.Rows[i]["ItemCode"]) != "")
+                MyShoppingCart usersShoppingCart = new MyShoppingCart();
+                String cartId = GetShoppingCartId();
+                DataTable list1 = (DataTable)JsonConvert.DeserializeObject(str2, (typeof(DataTable)));
+                for (int i = 0; i < list1.Rows.Count; i++)
                 {
-                    usersShoppingCart.UpdateShoppingCartDatabase(cartId, Convert.ToString(list1.Rows[i]["ItemCode"]), Convert.ToString(list1.Rows[i]["Quantity"]), Convert.ToBoolean(list1.Rows[i]["Remove"]));
+                    if (Convert.ToString(list1.Rows[i]["ItemCode"]) != "")
+                    {
+                        usersShoppingCart.UpdateShoppingCartDatabase(cartId, Convert.ToString(list1.Rows[i]["ItemCode"]), Convert.ToString(list1.Rows[i]["Quantity"]), Convert.ToBoolean(list1.Rows[i]["Remove"]));
+                    }
                 }
+                ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
+                ViewBag.statusLabel = "Updated Shopping cart.";
+                int numRows = 0;
+                DataTable dt = new DataTable();
+                dt = objBALProductList.GetQuantity(Convert.ToString(Session["CartId"]));
+                if (dt.Rows.Count > 0)
+                {
+                    numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
+                }
+                return Json(new { success = true, Message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
             }
-            ViewBag.lblTotal = String.Format("{0:c}", usersShoppingCart.GetTotal(cartId));
-            ViewBag.statusLabel = "Updated Shopping cart.";
-            int numRows = 0;
-            DataTable dt = new DataTable();
-            dt = objBALProductList.GetQuantity(Convert.ToString(Session["CartId"]));
-            if (dt.Rows.Count > 0)
+            catch (Exception ex)
             {
-                numRows = Convert.ToInt32(dt.Rows[0][0].ToString());
+                logger.Error(ex.ToString());
+                return Json(new { success = true, Message = "Failed" }, JsonRequestBehavior.AllowGet);
             }
-            return Json(new { success = true, Message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -561,7 +637,8 @@ namespace Punchout.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Response.Write("SQL ERROR: " + ex.Message);
+                    // Response.Write("SQL ERROR: " + ex.Message);
+                    logger.Error(ex.ToString());
                 }
             }
             return RedirectToAction("Index");
@@ -573,6 +650,8 @@ namespace Punchout.Web.Controllers
         /// <returns></returns>
         public ActionResult CheckOut()
         {
+            try
+            { 
             string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["PunchOut_CartID"] + "';";
             string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [dbo].[PunchOrders] ORDER BY orderno DESC;";
             string hiddenHTML = "";
@@ -795,7 +874,14 @@ namespace Punchout.Web.Controllers
                 numRows2 = com4.ExecuteNonQuery();
                 condel.Close();
             }
+        }
+            catch(Exception ex)
+            {
+                logger.Error(ex.ToString());
+                return View();
+            }
             return View();
+
         }
     }
 }
