@@ -511,7 +511,7 @@ namespace Punchout.Web.Controllers
                 }
                 else
                 {
-                      return Content("<script language='javascript' type='text/javascript'>alert('We should never get to AddToCart without a ProductId.');</script>");   
+                     return Content("<script language='javascript' type='text/javascript'>alert('We should never get to AddToCart without a ProductId.');</script>");   
                 }
                
             }
@@ -635,7 +635,6 @@ namespace Punchout.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    // Response.Write("SQL ERROR: " + ex.Message);
                     logger.Error(ex.ToString());
                 }
             }
@@ -705,7 +704,7 @@ namespace Punchout.Web.Controllers
                             hasFuel = true;
                             totalItemPrice = totalItemPrice + (Convert.ToDouble(reader[12]) / Convert.ToDouble(reader[4]));
                         }
-                        // Now we can just add the others in as they are per ite, per quantity
+                        // Now we can just add the others in as they are per item, per quantity
                         totalItemPrice = totalItemPrice + Convert.ToDouble(reader[10]) + Convert.ToDouble(reader[13]) + Convert.ToDouble(reader[14]);
                         stotalItemPrice = String.Format("{0:0.00}", totalItemPrice);
                         // Convert the StandardLeadTime into an equivalent with checking if we need to account for Honeywell
