@@ -57,7 +57,12 @@
                                     @Html.DisplayFor(modelitem => item.SalesUnitOfMeasure)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelitem => item.StandardUnitPrice)
+                                    @{
+                                        var unitprice = String.Format("{0:C}", item.StandardUnitPrice);
+                                        @Html.DisplayFor(modelitem => unitprice)
+                                    }
+
+                                   
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelitem => item.UDF_HNW_CLASSIFICATION_CODE)

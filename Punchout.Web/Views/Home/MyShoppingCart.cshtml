@@ -34,7 +34,12 @@
                         <td id="lblItemCode">@item.ItemCode</td>
                         <td id="lblItemCodeDesc">@item.ItemCodeDesc</td>
                         <td id="lblSalesUnitOfMeasure">@item.SalesUnitOfMeasure</td>
-                        <td id="lblUnitCost">@item.UnitCost</td>
+                        <td id="lblUnitCost">
+                            @{
+                                var unitprice = String.Format("{0:C}", item.UnitCost);
+                                @Html.DisplayFor(Model => unitprice)
+                            }
+                        </td>
                         @*<td>@item.Quantity</td>*@
                         <td id="txtQuantity">
                             @Html.TextBoxFor(Model => item.Quantity)
@@ -42,8 +47,12 @@
 
 
                         <td id="lblitemtotal">
-                            @((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
-            Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER)))
+                            @{
+                                var ItemTotal = String.Format("{0:C}",((Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UnitCost)) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_ENVIRONMENTAL)) +
+             Convert.ToDouble(item.UDF_FREIGHT) + Convert.ToDouble(item.UDF_FUEL) + (Convert.ToDouble(item.Quantity) * Convert.ToDouble(item.UDF_OTHER))));
+                               @Html.DisplayFor(Model=> ItemTotal)
+                            }
+
                         </td>
                         <td id="chkremove"><input type="checkbox" /></td>
                     </tr>
@@ -84,7 +93,7 @@
                 else
                 {
                     <img id="UpdateBtn" style="cursor: pointer" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" onclick="addMyList()" />
-                    <a href='@Url.Action("CheckOut","Home")'>
+                    <a  onclick="return confirm('Are you sure you want to place this order?')" href='@Url.Action("CheckOut","Home")'>
                         <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP"/>
                     </a>
 

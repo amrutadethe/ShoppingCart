@@ -64,7 +64,7 @@
                 </table>
                 <span class="UnitCost">
                     @{
-                        var Price = "Your Price:" + Convert.ToString(Model.StandardUnitPrice);
+                        var Price = "Your Price:" + String.Format("{0:C}",Model.StandardUnitPrice);
                         @Html.DisplayFor(Model => Price)
                     }
                 </span>
