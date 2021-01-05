@@ -84,11 +84,8 @@
             <div align="center" id="btndiv">
                 @if (ViewBag.ShoppingCartTitle == "Shopping Cart is Empty")
                 {
-
                     <img id="UpdateBtn" src="~/Content/img/update_cart.gif" alt="Update your Shopping Cart" />
-
-                    <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />
-                    
+                    <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP" />   
                 }
                 else
                 {
@@ -96,7 +93,6 @@
                     <a  onclick="return confirm('Are you sure you want to place this order?')" href='@Url.Action("CheckOut","Home")'>
                         <img id="CheckoutBtn" src="~/Content/img/final_checkout.gif" alt="Submit and Return to EBP"/>
                     </a>
-
                 }
             </div>
         </div>

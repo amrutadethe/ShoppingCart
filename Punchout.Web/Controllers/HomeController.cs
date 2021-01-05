@@ -355,7 +355,8 @@ namespace Punchout.Web.Controllers
                 PageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
                 Session["Sitedesc"] = site_desc;
                 if (Session["Site_Code"] == null)
-                    Session["Site_Code"] = site_code;
+                    Session["Site_Code"] = site_code;   
+                    Session["ProductListTitle"] = "Showing all products - ";
                 ProductListViewModel model = new ProductListViewModel();
                 List<CI_Item> getList = new List<CI_Item>();
                 IPagedList<CI_Item> PageList = null;
@@ -416,7 +417,7 @@ namespace Punchout.Web.Controllers
             try
             {
                 var getProductDetails = objBALProductList.GetProductDetails(id);
-                string selStr = "SELECT StandardLeadTime FROM [MAS_CML].[dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';";
+                string selStr = "SELECT StandardLeadTime FROM [dbo].[IM_ItemVendor] WHERE ItemCode = '" + id + "';";
                 using (SqlConnection conLead = new SqlConnection(MAS_CML))
                 {
                     SqlCommand com = new SqlCommand(selStr, conLead);
@@ -650,7 +651,7 @@ namespace Punchout.Web.Controllers
         {
             try
             {
-                string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["PunchOut_CartID"] + "';";
+                string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["CartId"] + "';";
                 string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [dbo].[PunchOrders] ORDER BY orderno DESC;";
                 string hiddenHTML = "";
                 int x = 0;
@@ -830,7 +831,6 @@ namespace Punchout.Web.Controllers
                                 newDays += 2;
                                 break;
                         }
-
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-DESCRIPTION[" + x + @"]"" value=""" + reader[2] + @""">";
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-MATGROUP[" + x + @"]"" value=""" + reader[15] + @""">";
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-QUANTITY[" + x + @"]"" value=""" + reader[4] + @""">";
@@ -856,7 +856,6 @@ namespace Punchout.Web.Controllers
                     con.Close();
                 }
                 stotPrice = String.Format("{0:0.00}", totPrice);
-                // the form submission to HubWoo
                 Response.Write(hiddenHTML);
                 string deleteString = "DELETE FROM [dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
                 String Date = DateTime.Now.ToString("dd/MM/yyyy");
@@ -878,6 +877,7 @@ namespace Punchout.Web.Controllers
                 logger.Error(ex.ToString());
                 return View();
             }
+          
             return Redirect(Convert.ToString(Session["HOOK_URL"]));
         }
     }
