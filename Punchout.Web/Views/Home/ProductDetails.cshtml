@@ -25,9 +25,18 @@
                         <td style="vertical-align:top;">
 
                             @{
-                                string image = ProductImageUrl + Model.Category1 + ".jpg";
+                                if (Model.Category1 == null)
+                                {
+                                    string image = ProductImageUrl + "naimg.jpg";
+                                    @Html.Image("categoryImage", image, "Product Image")
+                                }
+                                else
+                                {
+                                    string image = ProductImageUrl + Model.Category1 + ".jpg";
+                                    @Html.Image("categoryImage", image, "Product Image")
+                                }
                             }
-                            @Html.Image("categoryImage", image, "Product Image")
+
                         </td>
                         <td style="vertical-align: top">
                             <table>
