@@ -17,8 +17,6 @@ using System.Web.Mvc;
 using System.Web.UI;
 using PagedList;
 using System.Configuration;
-using Fluentx.Mvc;
-
 namespace Punchout.Web.Controllers
 {
     public class HomeController : Controller
