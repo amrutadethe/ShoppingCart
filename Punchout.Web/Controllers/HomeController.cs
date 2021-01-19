@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using PagedList;
 using System.Configuration;
+using Fluentx.Mvc;
 
 namespace Punchout.Web.Controllers
 {
@@ -646,14 +647,18 @@ namespace Punchout.Web.Controllers
         /// Place Order.Submit and return to EBP
         /// </summary>
         /// <returns></returns>
-      
+     
         public ActionResult CheckOut()
         {
+            Dictionary<string, object> postData = new Dictionary<string, object>();
+            string hiddenHTML = "";
             try
             {
+
                 string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["CartId"] + "';";
                 string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [dbo].[PunchOrders] ORDER BY orderno DESC;";
-                string hiddenHTML = "";
+              
+
                 int x = 0;
                 bool hasFreight = false;
                 bool hasFuel = false;
@@ -831,8 +836,8 @@ namespace Punchout.Web.Controllers
                                 newDays += 2;
                                 break;
                         }
-                        hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-DESCRIPTION[" + x + @"]"" value=""" + reader[2] + @""">";
-                        hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-MATGROUP[" + x + @"]"" value=""" + reader[15] + @""">";
+                        hiddenHTML += @"<input type='hidden' name='NEW_ITEM-DESCRIPTION[" + x + @"]' value='" + reader[2] + @"'>";
+                        hiddenHTML += @"<input type='hidden' name='NEW_ITEM-MATGROUP[" + x + @"]' value='" + reader[15] + @"'>";
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-QUANTITY[" + x + @"]"" value=""" + reader[4] + @""">";
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-UNIT[" + x + @"]"" value=""" + reader[5] + @""">";
                         hiddenHTML += @"<input type=""hidden"" name=""NEW_ITEM-PRICE[" + x + @"]"" value=""" + stotalItemPrice + @""">";
@@ -859,7 +864,7 @@ namespace Punchout.Web.Controllers
                 Response.Write(hiddenHTML);
                 string deleteString = "DELETE FROM [dbo].[ShoppingCart] WHERE CartID = '" + Session["CartId"] + "';";
                 String Date = DateTime.Now.ToString("dd/MM/yyyy");
-                string orderString = "INSERT INTO [dbo].[PunchOrders] VALUES(getdate(), '" + Session["UserName"] + "');";
+                string orderString = "INSERT INTO [dbo].[PunchOrders] VALUES(getdate(), '" + Session["HOOK_URL"] + "');";
                 int numRows1 = 0;
                 int numRows2 = 0;
                 using (SqlConnection condel = new SqlConnection(cmis_portal))
@@ -877,8 +882,7 @@ namespace Punchout.Web.Controllers
                 logger.Error(ex.ToString());
                 return View();
             }
-          
-            return Redirect(Convert.ToString(Session["HOOK_URL"]));
+            return Redirect("http://"+Convert.ToString(Session["HOOK_URL"]));
         }
     }
 }
