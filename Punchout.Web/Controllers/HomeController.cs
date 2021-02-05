@@ -652,11 +652,8 @@ namespace Punchout.Web.Controllers
             string hiddenHTML = "";
             try
             {
-
                 string queryString = "SELECT * FROM [dbo].[ViewCart] WHERE CartID = '" + Session["CartId"] + "';";
                 string queryString3 = "SELECT TOP(1) orderno, orderdt, orderuser FROM [dbo].[PunchOrders] ORDER BY orderno DESC;";
-              
-
                 int x = 0;
                 bool hasFreight = false;
                 bool hasFuel = false;
